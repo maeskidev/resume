@@ -21,6 +21,8 @@
   display: flex;
   flex-direction: column;
   padding: 1rem;
+  max-height: calc(100vh - 2.5rem);
+  overflow-y: auto;
 }
 
 .top-bar {
@@ -39,6 +41,7 @@
 }
 
 .download-btn,
+.print-btn,
 .secondary-btn,
 .danger-btn {
   border: 0;
@@ -55,6 +58,44 @@
   font-weight: 700;
 }
 
+.print-btn {
+  background: #dbe6de;
+  color: #1e3930;
+  padding: 0.6rem 0.95rem;
+  font-weight: 700;
+  border: 1px solid #b9c8bf;
+}
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.print-mode-toggle {
+  display: inline-flex;
+  background: #ece5d9;
+  border: 1px solid #c7bbab;
+  border-radius: 999px;
+  padding: 0.2rem;
+}
+
+.print-mode-btn {
+  border: 0;
+  background: transparent;
+  color: #334239;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.35rem 0.62rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.print-mode-btn.active {
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(44, 40, 32, 0.16);
+}
+
 .download-btn:disabled {
   opacity: 0.65;
   cursor: not-allowed;
@@ -62,7 +103,7 @@
 
 .resume-preview {
   width: min(100%, 887px);
-  min-height: 1120px;
+  
   margin: 0 auto;
   padding: 0;
   border-radius: 4px;
@@ -142,14 +183,15 @@
   margin-top: 1.45rem;
 }
 
-.resume-section-experience h4 {
+.resume-section-experience h4,
+.resume-section-education h4 {
   border-bottom: 0;
   padding-bottom: 0;
   margin-bottom: 0.85rem;
   font-size: 1.8rem;
   letter-spacing: 0;
   text-transform: none;
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 700;
 }
 
@@ -186,7 +228,7 @@
   font-size: 1.08rem;
   line-height: 1.15;
   text-transform: none;
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .exp-company-meta p {
@@ -220,7 +262,7 @@
   margin: 0;
   font-size: 1.03rem;
   line-height: 1.2;
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 700;
 }
 
@@ -341,7 +383,7 @@
 .section-title {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 0.65rem;
   margin-bottom: 0.65rem;
 }
@@ -377,11 +419,103 @@ textarea {
   font-weight: 700;
 }
 
+.btn-add-role{
+  width: 36px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  border: none;
+  background: #efe9dd;
+  box-shadow:
+    5px 5px 10px rgba(185, 174, 157, 0.45),
+    -4px -4px 8px rgba(255, 255, 255, 0.88);
+  cursor: pointer;
+}
+
+.btn-add-role:active {
+  box-shadow:
+    inset 3px 3px 6px rgba(181, 169, 152, 0.52),
+    inset -3px -3px 7px rgba(255, 255, 255, 0.9);
+}
+
+.icon-btn-img {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
 .group-card {
   border: 1px solid #ddd7cb;
   border-radius: 8px;
   padding: 0.7rem;
   background: #fffcf7;
+  position: relative;
+}
+
+.company-delete-btn {
+  position: absolute;
+  top: 0;
+  right:-15px;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #7a3a30;
+  background: #efe9dd;
+  box-shadow:
+    5px 5px 10px rgba(185, 174, 157, 0.55),
+    -4px -4px 9px rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+}
+
+.company-delete-btn:hover {
+  color: #8d2f22;
+  transform: translateY(-1px);
+}
+
+.company-delete-btn:active {
+  box-shadow:
+    inset 3px 3px 7px rgba(181, 169, 152, 0.6),
+    inset -3px -3px 7px rgba(255, 255, 255, 0.88);
+  transform: translateY(0);
+}
+
+.add-company-fab {
+  width: 56px;
+  height: 56px;
+  margin: 0.35rem auto 0;
+  border: 0;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.9rem;
+  line-height: 1;
+  color: #2e473d;
+  background: #efe9dd;
+  box-shadow:
+    8px 8px 14px rgba(185, 174, 157, 0.55),
+    -8px -8px 14px rgba(255, 255, 255, 0.95);
+  cursor: pointer;
+}
+
+.add-company-fab:hover {
+  color: #214238;
+  transform: translateY(-2px);
+}
+
+.add-company-fab:active {
+  box-shadow:
+    inset 5px 5px 11px rgba(179, 166, 148, 0.65),
+    inset -5px -5px 11px rgba(255, 255, 255, 0.9);
+  transform: translateY(0);
 }
 
 .project-title-row h4 {
@@ -391,12 +525,112 @@ textarea {
   letter-spacing: 0.06em;
 }
 
+.projects-list-indent {
+  margin-left: 0.95rem;
+  padding-left: 0.8rem;
+  border-left: 2px solid #e7dfd0;
+}
+
 .nested-card {
   border: 1px solid #e3ddd2;
   border-radius: 8px;
   padding: 0.6rem;
   margin: 0.55rem 0;
   background: #ffffff;
+  position: relative;
+  padding-top: 2.2rem;
+}
+
+.nested-card.collapsed {
+  padding-bottom: 0.65rem;
+}
+
+.project-delete-btn {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.45rem;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #7a3a30;
+  background: #efe9dd;
+  box-shadow:
+    4px 4px 9px rgba(185, 174, 157, 0.52),
+    -4px -4px 9px rgba(255, 255, 255, 0.88);
+  cursor: pointer;
+}
+
+.project-delete-btn:active {
+  box-shadow:
+    inset 3px 3px 7px rgba(181, 169, 152, 0.58),
+    inset -3px -3px 7px rgba(255, 255, 255, 0.85);
+}
+
+.project-collapse-btn {
+  position: absolute;
+  top: 0.45rem;
+  left: 0.55rem;
+  width: 28px;
+  height: 28px;
+  border: 1px solid #d6cebf;
+  background: #f8f4ea;
+  color: #3e4e45;
+  border-radius: 999px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.project-collapse-btn:hover {
+  transform: translateY(-1px);
+}
+
+.project-collapse-btn.is-collapsed .icon-btn-img {
+  transform: rotate(180deg);
+}
+
+.project-collapse-btn .icon-btn-img {
+  transition: transform 220ms ease;
+}
+
+.project-summary-title {
+  margin: 0 0 0.55rem;
+  font-size: 0.78rem;
+  color: #4a524c;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.project-fields {
+  max-height: 700px;
+  opacity: 1;
+  overflow: hidden;
+  transition: max-height 320ms ease, opacity 240ms ease;
+}
+
+.project-fields-inner {
+  padding-top: 0.1rem;
+  transform: translateY(0);
+  transition: transform 260ms ease;
+}
+
+.project-fields.is-collapsed {
+  max-height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.project-fields.is-collapsed .project-fields-inner {
+  transform: translateY(-6px);
 }
 
 .group-card + .group-card {
@@ -494,7 +728,99 @@ textarea {
     align-items: flex-start;
   }
 
+  .top-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .print-mode-toggle {
+    justify-self: start;
+  }
+
   .summary {
     max-width: 100%;
+  }
+}
+
+@page {
+  size: A4;
+  margin: 12mm 10mm;
+}
+
+@media print {
+  body {
+    background: #ffffff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .app-shell {
+    display: block;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    min-height: auto;
+  }
+
+  .form-column,
+  .top-bar {
+    display: none !important;
+  }
+
+  .preview-column {
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    backdrop-filter: none;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .resume-preview {
+    width: 100%;
+    margin: 0;
+  }
+
+  body[data-print-mode='ats'] {
+    font-size: 13.5px;
+  }
+
+  body[data-print-mode='ats'] .resume-preview {
+    border: 0;
+    box-shadow: none;
+    background: #ffffff;
+  }
+
+  body[data-print-mode='ats'] .exp-company-logo {
+    background: transparent !important;
+    color: #111111 !important;
+    border: 1px solid #5b5b5b;
+  }
+
+  body[data-print-mode='visual'] {
+    font-size: 14px;
+  }
+
+  body[data-print-mode='visual'] .resume-preview {
+    border: 1px solid #d7d0c3;
+    box-shadow: none;
+    background: #fffefb;
+  }
+
+  .resume-header,
+  .resume-section,
+  .exp-company-block,
+  .exp-project-item,
+  .item-card {
+    /* break-inside: avoid; */
+    /* page-break-inside: avoid; */
+    orphans: 3;
+    widows: 3;
+  }
+
+  .resume-section-education {
+    padding-bottom: 0;
   }
 }

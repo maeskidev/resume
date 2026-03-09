@@ -1,6 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import html2canvas from 'html2canvas'
 import { jsPDF } from 'jspdf'
+import addIcon from './assets/add.svg'
+import collapseIcon from './assets/collapse.svg'
+import deleteIcon from './assets/delete.svg'
+import expandIcon from './assets/expand.svg'
 import './App.css'
 
 type ExperienceMode = 'Presencial' | 'Remoto' | 'Hibrido'
@@ -40,6 +44,8 @@ type ResumeData = {
   experience: ExperienceCompany[]
   education: EducationItem[]
 }
+
+type PrintMode = 'ats' | 'visual'
 
 const modeOptions: ExperienceMode[] = ['Presencial', 'Remoto', 'Hibrido']
 const RESUME_STORAGE_KEY = 'resume-maker-data-v1'
@@ -113,10 +119,16 @@ function App() {
   const resumeRef = useRef<HTMLDivElement | null>(null)
   const [isExporting, setIsExporting] = useState(false)
   const [data, setData] = useState<ResumeData>(getInitialResumeData)
+  const [collapsedProjects, setCollapsedProjects] = useState<Record<string, boolean>>({})
+  const [printMode, setPrintMode] = useState<PrintMode>('ats')
 
   useEffect(() => {
     window.localStorage.setItem(RESUME_STORAGE_KEY, JSON.stringify(data))
   }, [data])
+
+  useEffect(() => {
+    document.body.setAttribute('data-print-mode', printMode)
+  }, [printMode])
 
   const nextExperienceCompanyId = useMemo(() => {
     return data.experience.reduce((max, company) => Math.max(max, company.id), 0) + 1
@@ -253,6 +265,21 @@ function App() {
           : company,
       ),
     }))
+
+    const key = `${companyId}-${projectId}`
+    setCollapsedProjects((prev) => {
+      if (!(key in prev)) {
+        return prev
+      }
+      const next = { ...prev }
+      delete next[key]
+      return next
+    })
+  }
+
+  const toggleProjectCollapsed = (companyId: number, projectId: number) => {
+    const key = `${companyId}-${projectId}`
+    setCollapsedProjects((prev) => ({ ...prev, [key]: !prev[key] }))
   }
 
   const addEducation = () => {
@@ -318,13 +345,18 @@ function App() {
     }
   }
 
+  const printResume = () => {
+    document.body.setAttribute('data-print-mode', printMode)
+    window.print()
+  }
+
   return (
     <main className="app-shell">
       <aside className="form-column">
         <h2>Formulario</h2>
 
         <section className="form-section">
-          <h3>Header</h3>
+          <h3>Perfil</h3>
           <label>
             Nombre completo
             <input
@@ -380,13 +412,20 @@ function App() {
         <section className="form-section">
           <div className="section-title">
             <h3>Experiencia</h3>
-            <button type="button" className="secondary-btn" onClick={addExperienceCompany}>
-              + Agregar empresa
-            </button>
           </div>
 
           {data.experience.map((company) => (
             <div className="group-card" key={company.id}>
+              {/* aqui el boton de eliminar empresa en forma de icono de "x" o de eliminar flotanto a la parte derecha estilo neomorfismo */}
+              <button
+                type="button"
+                className="company-delete-btn"
+                aria-label="Eliminar empresa"
+                title="Eliminar empresa"
+                onClick={() => removeExperienceCompany(company.id)}
+              >
+                <img src={deleteIcon} alt="Eliminar" className="icon-btn-img" />
+              </button>
               <label>
                 Empresa
                 <input
@@ -421,100 +460,160 @@ function App() {
                 <h4>Proyectos / Roles</h4>
                 <button
                   type="button"
-                  className="secondary-btn"
+                  className="btn-add-role"
                   onClick={() => addExperienceProject(company.id)}
+                  aria-label="Agregar item hijo"
+                  title="Agregar item hijo"
                 >
-                  + Agregar item hijo
+                  <img src={addIcon} alt="Agregar" className="icon-btn-img" />
                 </button>
               </div>
 
-              {company.projects.map((project) => (
-                <div className="nested-card" key={project.id}>
-                  <label>
-                    Titulo
-                    <input
-                      value={project.title}
-                      onChange={(event) =>
-                        updateExperienceProject(company.id, project.id, 'title', event.target.value)
-                      }
-                    />
-                  </label>
-                  <label>
-                    Inicio - Fin (texto libre)
-                    <input
-                      placeholder="2020 - 2023"
-                      value={project.period}
-                      onChange={(event) =>
-                        updateExperienceProject(company.id, project.id, 'period', event.target.value)
-                      }
-                    />
-                  </label>
+              <div className="projects-list-indent">
+                {company.projects.map((project) => {
+                  const projectKey = `${company.id}-${project.id}`
+                  const isCollapsed = Boolean(collapsedProjects[projectKey])
 
-                  <div>
-                    <p className="label-title">Modalidad</p>
-                    <div className="checkbox-row">
-                      {modeOptions.map((option) => (
-                        <label className="checkbox-option" key={option}>
-                          <input
-                            type="checkbox"
-                            checked={project.mode === option}
-                            onChange={() =>
-                              updateExperienceProject(company.id, project.id, 'mode', option)
-                            }
-                          />
-                          {option}
-                        </label>
-                      ))}
+                  return (
+                    <div className={`nested-card ${isCollapsed ? 'collapsed' : ''}`} key={project.id}>
+                      <button
+                        type="button"
+                        className="project-delete-btn"
+                        aria-label="Eliminar item hijo"
+                        title="Eliminar item hijo"
+                        onClick={() => removeExperienceProject(company.id, project.id)}
+                      >
+                        <img src={deleteIcon} alt="Eliminar" className="icon-btn-img" />
+                      </button>
+
+                      <button
+                        type="button"
+                        className={`project-collapse-btn ${isCollapsed ? 'is-collapsed' : ''}`}
+                        onClick={() => toggleProjectCollapsed(company.id, project.id)}
+                        aria-label={isCollapsed ? 'Expandir item hijo' : 'Colapsar item hijo'}
+                        title={isCollapsed ? 'Expandir item hijo' : 'Colapsar item hijo'}
+                      >
+                        <img
+                          src={isCollapsed ? expandIcon : collapseIcon}
+                          alt={isCollapsed ? 'Expandir' : 'Colapsar'}
+                          className="icon-btn-img"
+                        />
+                      </button>
+
+                      <p className="project-summary-title">
+                        {project.title || 'Proyecto / Rol sin titulo'}
+                      </p>
+
+                      <div className={`project-fields ${isCollapsed ? 'is-collapsed' : ''}`}>
+                        <div className="project-fields-inner">
+                          <label>
+                            Titulo
+                            <input
+                              value={project.title}
+                              onChange={(event) =>
+                                updateExperienceProject(
+                                  company.id,
+                                  project.id,
+                                  'title',
+                                  event.target.value,
+                                )
+                              }
+                            />
+                          </label>
+                          <label>
+                            Inicio - Fin (texto libre)
+                            <input
+                              placeholder="2020 - 2023"
+                              value={project.period}
+                              onChange={(event) =>
+                                updateExperienceProject(
+                                  company.id,
+                                  project.id,
+                                  'period',
+                                  event.target.value,
+                                )
+                              }
+                            />
+                          </label>
+
+                          <div>
+                            <p className="label-title">Modalidad</p>
+                            <div className="checkbox-row">
+                              {modeOptions.map((option) => (
+                                <label className="checkbox-option" key={option}>
+                                  <input
+                                    type="checkbox"
+                                    checked={project.mode === option}
+                                    onChange={() =>
+                                      updateExperienceProject(company.id, project.id, 'mode', option)
+                                    }
+                                  />
+                                  {option}
+                                </label>
+                              ))}
+                            </div>
+                          </div>
+
+                          <label>
+                            Descripcion
+                            <textarea
+                              rows={3}
+                              value={project.description}
+                              onChange={(event) =>
+                                updateExperienceProject(
+                                  company.id,
+                                  project.id,
+                                  'description',
+                                  event.target.value,
+                                )
+                              }
+                            />
+                          </label>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  )
+                })}
+              </div>
 
-                  <label>
-                    Descripcion
-                    <textarea
-                      rows={3}
-                      value={project.description}
-                      onChange={(event) =>
-                        updateExperienceProject(
-                          company.id,
-                          project.id,
-                          'description',
-                          event.target.value,
-                        )
-                      }
-                    />
-                  </label>
-
-                  <button
-                    type="button"
-                    className="danger-btn"
-                    onClick={() => removeExperienceProject(company.id, project.id)}
-                  >
-                    Eliminar item hijo
-                  </button>
-                </div>
-              ))}
-
-              <button
-                type="button"
-                className="danger-btn"
-                onClick={() => removeExperienceCompany(company.id)}
-              >
-                Eliminar empresa
-              </button>
             </div>
           ))}
+
+          {/* aqui boton de agregar empresa centrado y con estilo moderno redondo con solo el simbolo "+" estilo neomorfismo */}
+          <button
+            type="button"
+            className="add-company-fab"
+            aria-label="Agregar empresa"
+            title="Agregar empresa"
+            onClick={addExperienceCompany}
+          >
+            +
+          </button>
         </section>
 
         <section className="form-section">
           <div className="section-title">
-            <h3>Educacion</h3>
-            <button type="button" className="secondary-btn" onClick={addEducation}>
-              + Agregar item
+            <h4>Educacion</h4>
+            <button
+              type="button"
+              className="btn-add-role"
+              aria-label="Agregar educacion"
+              title="Agregar educacion"
+              onClick={addEducation}
+            >
+              +
             </button>
           </div>
 
           {data.education.map((item) => (
             <div className="group-card" key={item.id}>
+              <button
+                type="button"
+                className="company-delete-btn"
+                onClick={() => removeEducation(item.id)}
+              >
+                <img src={deleteIcon} alt="Eliminar" className="icon-btn-img" />
+              </button>
               <label>
                 Institucion
                 <input
@@ -545,13 +644,7 @@ function App() {
                 />
               </label>
 
-              <button
-                type="button"
-                className="danger-btn"
-                onClick={() => removeEducation(item.id)}
-              >
-                Eliminar item
-              </button>
+
             </div>
           ))}
         </section>
@@ -560,9 +653,30 @@ function App() {
       <section className="preview-column">
         <header className="top-bar">
           <h1>CV Maker</h1>
-          <button className="download-btn" onClick={downloadPdf} disabled={isExporting}>
-            {isExporting ? 'Generando PDF...' : 'Descargar en PDF'}
-          </button>
+          <div className="top-actions">
+            <div className="print-mode-toggle" role="group" aria-label="Modo de impresion">
+              <button
+                type="button"
+                className={`print-mode-btn ${printMode === 'ats' ? 'active' : ''}`}
+                onClick={() => setPrintMode('ats')}
+              >
+                ATS
+              </button>
+              <button
+                type="button"
+                className={`print-mode-btn ${printMode === 'visual' ? 'active' : ''}`}
+                onClick={() => setPrintMode('visual')}
+              >
+                Visual
+              </button>
+            </div>
+            <button className="print-btn" onClick={printResume}>
+              {printMode === 'ats' ? 'Imprimir ATS (Ctrl+P)' : 'Imprimir Visual (Ctrl+P)'}
+            </button>
+            <button className="download-btn" onClick={downloadPdf} disabled={isExporting}>
+              {isExporting ? 'Generando PDF...' : 'PDF Imagen'}
+            </button>
+          </div>
         </header>
 
         <article className="resume-preview" ref={resumeRef}>
