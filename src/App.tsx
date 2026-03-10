@@ -47,10 +47,16 @@ type ResumeData = {
 
 type PrintMode = 'ats' | 'visual'
 type LegalRoute = '/privacy' | '/terms' | '/contact'
+type FormStepKey = 'profile' | 'experience' | 'education'
 
 const modeOptions: ExperienceMode[] = ['Presencial', 'Remoto', 'Hibrido']
 const RESUME_STORAGE_KEY = 'resume-maker-data-v1'
 const legalRoutes: LegalRoute[] = ['/privacy', '/terms', '/contact']
+const formSteps: Array<{ key: FormStepKey; title: string; hint: string }> = [
+  { key: 'profile', title: 'Perfil', hint: 'Datos principales' },
+  { key: 'experience', title: 'Experiencia', hint: 'Empresas y proyectos' },
+  { key: 'education', title: 'Educacion', hint: 'Formacion academica' },
+]
 
 const initialResumeData: ResumeData = {
   fullName: 'Michael E. Quiros',
@@ -125,8 +131,13 @@ function App() {
   const [data, setData] = useState<ResumeData>(getInitialResumeData)
   const [collapsedProjects, setCollapsedProjects] = useState<Record<string, boolean>>({})
   const [printMode, setPrintMode] = useState<PrintMode>('ats')
+  const [activeStep, setActiveStep] = useState(0)
   const adsenseClient = import.meta.env.VITE_ADSENSE_CLIENT as string | undefined
   const adsenseSlot = import.meta.env.VITE_ADSENSE_SLOT as string | undefined
+
+  const isFirstStep = activeStep === 0
+  const isLastStep = activeStep === formSteps.length - 1
+  const progress = ((activeStep + 1) / formSteps.length) * 100
 
   useEffect(() => {
     window.localStorage.setItem(RESUME_STORAGE_KEY, JSON.stringify(data))
@@ -448,314 +459,373 @@ function App() {
   return (
     <main className="app-shell">
       <aside className="form-column">
-        <section className="form-section">
-          <h3>Perfil</h3>
-          <label>
-            Nombre completo
-            <input
-              value={data.fullName}
-              onChange={(event) => updateBasicField('fullName', event.target.value)}
-            />
-          </label>
-          <label>
-            Cargo
-            <input
-              value={data.role}
-              onChange={(event) => updateBasicField('role', event.target.value)}
-            />
-          </label>
-          <label>
-            Correo
-            <input
-              value={data.email}
-              onChange={(event) => updateBasicField('email', event.target.value)}
-            />
-          </label>
-          <label>
-            Telefono
-            <input
-              value={data.phone}
-              onChange={(event) => updateBasicField('phone', event.target.value)}
-            />
-          </label>
-          <label>
-            Ubicacion
-            <input
-              value={data.location}
-              onChange={(event) => updateBasicField('location', event.target.value)}
-            />
-          </label>
-          <label>
-            Link
-            <input
-              value={data.website}
-              onChange={(event) => updateBasicField('website', event.target.value)}
-            />
-          </label>
-          <label>
-            Resumen profesional
-            <textarea
-              rows={3}
-              value={data.summary}
-              onChange={(event) => updateBasicField('summary', event.target.value)}
-            />
-          </label>
-        </section>
-
-        {adsenseClient && adsenseSlot && (
-          <section className="form-section ad-form-section">
-            <h4>Patrocinado</h4>
-            <ins
-              ref={adSlotRef}
-              className="adsbygoogle"
-              style={{ display: 'block' }}
-              data-ad-client={adsenseClient}
-              data-ad-slot={adsenseSlot}
-              data-ad-format="auto"
-              data-full-width-responsive="true"
-            />
-          </section>
-        )}
-
-        <section className="form-section">
-          <div className="section-title">
-            <h3>Experiencia</h3>
-          </div>
-
-          {data.experience.map((company) => (
-            <div className="group-card" key={company.id}>
-              {/* aqui el boton de eliminar empresa en forma de icono de "x" o de eliminar flotanto a la parte derecha estilo neomorfismo */}
-              <button
-                type="button"
-                className="company-delete-btn"
-                aria-label="Eliminar empresa"
-                title="Eliminar empresa"
-                onClick={() => removeExperienceCompany(company.id)}
-              >
-                <img src={deleteIcon} alt="Eliminar" className="icon-btn-img" />
-              </button>
-              <label>
-                Empresa
-                <input
-                  value={company.companyName}
-                  onChange={(event) =>
-                    updateExperienceCompany(company.id, 'companyName', event.target.value)
-                  }
-                />
-              </label>
-              <label>
-                Texto logo (iniciales)
-                <input
-                  placeholder="NTT"
-                  value={company.companyLogoText}
-                  onChange={(event) =>
-                    updateExperienceCompany(company.id, 'companyLogoText', event.target.value)
-                  }
-                />
-              </label>
-              <label>
-                Jornada y duracion
-                <input
-                  placeholder="Jornada completa - 5 anos 2 meses"
-                  value={company.employmentMeta}
-                  onChange={(event) =>
-                    updateExperienceCompany(company.id, 'employmentMeta', event.target.value)
-                  }
-                />
-              </label>
-
-              <div className="section-title project-title-row">
-                <h4>Proyectos / Roles</h4>
+        <div className="form-steps-shell">
+          <nav className="form-steps-nav form-dock" aria-label="Pasos del formulario">
+            {formSteps.map((step, index) => {
+              const stateClass = index === activeStep ? 'is-active' : index < activeStep ? 'is-done' : ''
+              return (
                 <button
+                  key={step.key}
                   type="button"
-                  className="btn-add-role"
-                  onClick={() => addExperienceProject(company.id)}
-                  aria-label="Agregar item hijo"
-                  title="Agregar item hijo"
+                  className={`step-item ${stateClass}`.trim()}
+                  onClick={() => setActiveStep(index)}
                 >
-                  <img src={addIcon} alt="Agregar" className="icon-btn-img" />
+                  <span className="step-index">{index < activeStep ? '✓' : index + 1}</span>
+                  <span className="step-text sr-only">
+                    <strong>{step.title}</strong>
+                    <small>{step.hint}</small>
+                  </span>
+                  <span className="step-tooltip" role="tooltip">
+                    {step.title}
+                  </span>
                 </button>
-              </div>
+              )
+            })}
+          </nav>
 
-              <div className="projects-list-indent">
-                {company.projects.map((project) => {
-                  const projectKey = `${company.id}-${project.id}`
-                  const isCollapsed = Boolean(collapsedProjects[projectKey])
+          <div className="step-panel">
+            <div className="step-progress-wrap" aria-hidden="true">
+              <div className="step-progress-fill" style={{ width: `${progress}%` }} />
+            </div>
+            <div className="step-current-meta">
+              <p>{formSteps[activeStep].title}</p>
+              <span>
+                {activeStep + 1}/{formSteps.length}
+              </span>
+            </div>
 
-                  return (
-                    <div className={`nested-card ${isCollapsed ? 'collapsed' : ''}`} key={project.id}>
+            <div key={activeStep} className="step-content-anim">
+            {activeStep === 0 && (
+              <section className="form-section">
+                <h3>Perfil</h3>
+                <label>
+                  Nombre completo
+                  <input
+                    value={data.fullName}
+                    onChange={(event) => updateBasicField('fullName', event.target.value)}
+                  />
+                </label>
+                <label>
+                  Cargo
+                  <input
+                    value={data.role}
+                    onChange={(event) => updateBasicField('role', event.target.value)}
+                  />
+                </label>
+                <label>
+                  Correo
+                  <input
+                    value={data.email}
+                    onChange={(event) => updateBasicField('email', event.target.value)}
+                  />
+                </label>
+                <label>
+                  Telefono
+                  <input
+                    value={data.phone}
+                    onChange={(event) => updateBasicField('phone', event.target.value)}
+                  />
+                </label>
+                <label>
+                  Ubicacion
+                  <input
+                    value={data.location}
+                    onChange={(event) => updateBasicField('location', event.target.value)}
+                  />
+                </label>
+                <label>
+                  Link
+                  <input
+                    value={data.website}
+                    onChange={(event) => updateBasicField('website', event.target.value)}
+                  />
+                </label>
+                <label>
+                  Resumen profesional
+                  <textarea
+                    rows={3}
+                    value={data.summary}
+                    onChange={(event) => updateBasicField('summary', event.target.value)}
+                  />
+                </label>
+              </section>
+            )}
+
+            {activeStep === 1 && (
+              <section className="form-section">
+                <div className="section-title">
+                  <h3>Experiencia</h3>
+                </div>
+
+                {data.experience.map((company) => (
+                  <div className="group-card" key={company.id}>
+                    <button
+                      type="button"
+                      className="company-delete-btn"
+                      aria-label="Eliminar empresa"
+                      title="Eliminar empresa"
+                      onClick={() => removeExperienceCompany(company.id)}
+                    >
+                      <img src={deleteIcon} alt="Eliminar" className="icon-btn-img" />
+                    </button>
+                    <label>
+                      Empresa
+                      <input
+                        value={company.companyName}
+                        onChange={(event) =>
+                          updateExperienceCompany(company.id, 'companyName', event.target.value)
+                        }
+                      />
+                    </label>
+                    <label>
+                      Texto logo (iniciales)
+                      <input
+                        placeholder="NTT"
+                        value={company.companyLogoText}
+                        onChange={(event) =>
+                          updateExperienceCompany(company.id, 'companyLogoText', event.target.value)
+                        }
+                      />
+                    </label>
+                    <label>
+                      Jornada y duracion
+                      <input
+                        placeholder="Jornada completa - 5 anos 2 meses"
+                        value={company.employmentMeta}
+                        onChange={(event) =>
+                          updateExperienceCompany(company.id, 'employmentMeta', event.target.value)
+                        }
+                      />
+                    </label>
+
+                    <div className="section-title project-title-row">
+                      <h4>Proyectos / Roles</h4>
                       <button
                         type="button"
-                        className="project-delete-btn"
-                        aria-label="Eliminar item hijo"
-                        title="Eliminar item hijo"
-                        onClick={() => removeExperienceProject(company.id, project.id)}
+                        className="btn-add-role"
+                        onClick={() => addExperienceProject(company.id)}
+                        aria-label="Agregar item hijo"
+                        title="Agregar item hijo"
                       >
-                        <img src={deleteIcon} alt="Eliminar" className="icon-btn-img" />
+                        <img src={addIcon} alt="Agregar" className="icon-btn-img" />
                       </button>
+                    </div>
 
-                      <button
-                        type="button"
-                        className={`project-collapse-btn ${isCollapsed ? 'is-collapsed' : ''}`}
-                        onClick={() => toggleProjectCollapsed(company.id, project.id)}
-                        aria-label={isCollapsed ? 'Expandir item hijo' : 'Colapsar item hijo'}
-                        title={isCollapsed ? 'Expandir item hijo' : 'Colapsar item hijo'}
-                      >
-                        <img
-                          src={isCollapsed ? expandIcon : collapseIcon}
-                          alt={isCollapsed ? 'Expandir' : 'Colapsar'}
-                          className="icon-btn-img"
-                        />
-                      </button>
+                    <div className="projects-list-indent">
+                      {company.projects.map((project) => {
+                        const projectKey = `${company.id}-${project.id}`
+                        const isCollapsed = Boolean(collapsedProjects[projectKey])
 
-                      <p className="project-summary-title">
-                        {project.title || 'Proyecto / Rol sin titulo'}
-                      </p>
+                        return (
+                          <div className={`nested-card ${isCollapsed ? 'collapsed' : ''}`} key={project.id}>
+                            <button
+                              type="button"
+                              className="project-delete-btn"
+                              aria-label="Eliminar item hijo"
+                              title="Eliminar item hijo"
+                              onClick={() => removeExperienceProject(company.id, project.id)}
+                            >
+                              <img src={deleteIcon} alt="Eliminar" className="icon-btn-img" />
+                            </button>
 
-                      <div className={`project-fields ${isCollapsed ? 'is-collapsed' : ''}`}>
-                        <div className="project-fields-inner">
-                          <label>
-                            Titulo
-                            <input
-                              value={project.title}
-                              onChange={(event) =>
-                                updateExperienceProject(
-                                  company.id,
-                                  project.id,
-                                  'title',
-                                  event.target.value,
-                                )
-                              }
-                            />
-                          </label>
-                          <label>
-                            Inicio - Fin (texto libre)
-                            <input
-                              placeholder="2020 - 2023"
-                              value={project.period}
-                              onChange={(event) =>
-                                updateExperienceProject(
-                                  company.id,
-                                  project.id,
-                                  'period',
-                                  event.target.value,
-                                )
-                              }
-                            />
-                          </label>
+                            <button
+                              type="button"
+                              className={`project-collapse-btn ${isCollapsed ? 'is-collapsed' : ''}`}
+                              onClick={() => toggleProjectCollapsed(company.id, project.id)}
+                              aria-label={isCollapsed ? 'Expandir item hijo' : 'Colapsar item hijo'}
+                              title={isCollapsed ? 'Expandir item hijo' : 'Colapsar item hijo'}
+                            >
+                              <img
+                                src={isCollapsed ? expandIcon : collapseIcon}
+                                alt={isCollapsed ? 'Expandir' : 'Colapsar'}
+                                className="icon-btn-img"
+                              />
+                            </button>
 
-                          <div>
-                            <p className="label-title">Modalidad</p>
-                            <div className="checkbox-row">
-                              {modeOptions.map((option) => (
-                                <label className="checkbox-option" key={option}>
+                            <p className="project-summary-title">
+                              {project.title || 'Proyecto / Rol sin titulo'}
+                            </p>
+
+                            <div className={`project-fields ${isCollapsed ? 'is-collapsed' : ''}`}>
+                              <div className="project-fields-inner">
+                                <label>
+                                  Titulo
                                   <input
-                                    type="checkbox"
-                                    checked={project.mode === option}
-                                    onChange={() =>
-                                      updateExperienceProject(company.id, project.id, 'mode', option)
+                                    value={project.title}
+                                    onChange={(event) =>
+                                      updateExperienceProject(
+                                        company.id,
+                                        project.id,
+                                        'title',
+                                        event.target.value,
+                                      )
                                     }
                                   />
-                                  {option}
                                 </label>
-                              ))}
+                                <label>
+                                  Inicio - Fin (texto libre)
+                                  <input
+                                    placeholder="2020 - 2023"
+                                    value={project.period}
+                                    onChange={(event) =>
+                                      updateExperienceProject(
+                                        company.id,
+                                        project.id,
+                                        'period',
+                                        event.target.value,
+                                      )
+                                    }
+                                  />
+                                </label>
+
+                                <div>
+                                  <p className="label-title">Modalidad</p>
+                                  <div className="checkbox-row">
+                                    {modeOptions.map((option) => (
+                                      <label className="checkbox-option" key={option}>
+                                        <input
+                                          type="checkbox"
+                                          checked={project.mode === option}
+                                          onChange={() =>
+                                            updateExperienceProject(company.id, project.id, 'mode', option)
+                                          }
+                                        />
+                                        {option}
+                                      </label>
+                                    ))}
+                                  </div>
+                                </div>
+
+                                <label>
+                                  Descripcion
+                                  <textarea
+                                    rows={3}
+                                    value={project.description}
+                                    onChange={(event) =>
+                                      updateExperienceProject(
+                                        company.id,
+                                        project.id,
+                                        'description',
+                                        event.target.value,
+                                      )
+                                    }
+                                  />
+                                </label>
+                              </div>
                             </div>
                           </div>
-
-                          <label>
-                            Descripcion
-                            <textarea
-                              rows={3}
-                              value={project.description}
-                              onChange={(event) =>
-                                updateExperienceProject(
-                                  company.id,
-                                  project.id,
-                                  'description',
-                                  event.target.value,
-                                )
-                              }
-                            />
-                          </label>
-                        </div>
-                      </div>
+                        )
+                      })}
                     </div>
-                  )
-                })}
-              </div>
+                  </div>
+                ))}
 
+                <button
+                  type="button"
+                  className="add-company-fab"
+                  aria-label="Agregar empresa"
+                  title="Agregar empresa"
+                  onClick={addExperienceCompany}
+                >
+                  +
+                </button>
+              </section>
+            )}
+
+            {activeStep === 2 && (
+              <section className="form-section">
+                <div className="section-title">
+                  <h4>Educacion</h4>
+                  <button
+                    type="button"
+                    className="btn-add-role"
+                    aria-label="Agregar educacion"
+                    title="Agregar educacion"
+                    onClick={addEducation}
+                  >
+                    +
+                  </button>
+                </div>
+
+                {data.education.map((item) => (
+                  <div className="group-card" key={item.id}>
+                    <button
+                      type="button"
+                      className="company-delete-btn"
+                      onClick={() => removeEducation(item.id)}
+                    >
+                      <img src={deleteIcon} alt="Eliminar" className="icon-btn-img" />
+                    </button>
+                    <label>
+                      Institucion
+                      <input
+                        value={item.institution}
+                        onChange={(event) => updateEducation(item.id, 'institution', event.target.value)}
+                      />
+                    </label>
+                    <label>
+                      Titulo/Carrera
+                      <input
+                        value={item.degree}
+                        onChange={(event) => updateEducation(item.id, 'degree', event.target.value)}
+                      />
+                    </label>
+                    <label>
+                      Periodo
+                      <input
+                        value={item.period}
+                        onChange={(event) => updateEducation(item.id, 'period', event.target.value)}
+                      />
+                    </label>
+                    <label>
+                      Descripcion
+                      <textarea
+                        rows={3}
+                        value={item.description}
+                        onChange={(event) => updateEducation(item.id, 'description', event.target.value)}
+                      />
+                    </label>
+                  </div>
+                ))}
+              </section>
+            )}
             </div>
-          ))}
 
-          {/* aqui boton de agregar empresa centrado y con estilo moderno redondo con solo el simbolo "+" estilo neomorfismo */}
-          <button
-            type="button"
-            className="add-company-fab"
-            aria-label="Agregar empresa"
-            title="Agregar empresa"
-            onClick={addExperienceCompany}
-          >
-            +
-          </button>
-        </section>
-
-        <section className="form-section">
-          <div className="section-title">
-            <h4>Educacion</h4>
-            <button
-              type="button"
-              className="btn-add-role"
-              aria-label="Agregar educacion"
-              title="Agregar educacion"
-              onClick={addEducation}
-            >
-              +
-            </button>
-          </div>
-
-          {data.education.map((item) => (
-            <div className="group-card" key={item.id}>
+            <div className="step-actions">
               <button
                 type="button"
-                className="company-delete-btn"
-                onClick={() => removeEducation(item.id)}
+                className="secondary-btn step-nav-btn"
+                onClick={() => setActiveStep((step) => Math.max(0, step - 1))}
+                disabled={isFirstStep}
               >
-                <img src={deleteIcon} alt="Eliminar" className="icon-btn-img" />
+                Anterior
               </button>
-              <label>
-                Institucion
-                <input
-                  value={item.institution}
-                  onChange={(event) => updateEducation(item.id, 'institution', event.target.value)}
-                />
-              </label>
-              <label>
-                Titulo/Carrera
-                <input
-                  value={item.degree}
-                  onChange={(event) => updateEducation(item.id, 'degree', event.target.value)}
-                />
-              </label>
-              <label>
-                Periodo
-                <input
-                  value={item.period}
-                  onChange={(event) => updateEducation(item.id, 'period', event.target.value)}
-                />
-              </label>
-              <label>
-                Descripcion
-                <textarea
-                  rows={3}
-                  value={item.description}
-                  onChange={(event) => updateEducation(item.id, 'description', event.target.value)}
-                />
-              </label>
-
-
+              <button
+                type="button"
+                className="print-btn step-nav-btn"
+                onClick={() => setActiveStep((step) => Math.min(formSteps.length - 1, step + 1))}
+                disabled={isLastStep}
+              >
+                {isLastStep ? 'Completado' : 'Siguiente'}
+              </button>
             </div>
-          ))}
-        </section>
+
+            {adsenseClient && adsenseSlot && (
+              <section className="form-section ad-form-section">
+                <h4>Patrocinado</h4>
+                <ins
+                  ref={adSlotRef}
+                  className="adsbygoogle"
+                  style={{ display: 'block' }}
+                  data-ad-client={adsenseClient}
+                  data-ad-slot={adsenseSlot}
+                  data-ad-format="auto"
+                  data-full-width-responsive="true"
+                />
+              </section>
+            )}
+          </div>
+        </div>
       </aside>
 
       <section className="preview-column">
@@ -861,9 +931,15 @@ function App() {
       </section>
 
       <footer className="legal-footer">
-        <a href="/privacy">Privacidad</a>
-        <a href="/terms">Terminos</a>
-        <a href="/contact">Contacto</a>
+        <a href="/privacy" data-tip="Privacidad">
+          Privacidad
+        </a>
+        <a href="/terms" data-tip="Terminos">
+          Terminos
+        </a>
+        <a href="/contact" data-tip="Contacto">
+          Contacto
+        </a>
       </footer>
     </main>
   )
