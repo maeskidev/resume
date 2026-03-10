@@ -411,7 +411,7 @@ function App() {
       '/terms': {
         title: 'Terminos de Uso',
         body: [
-          'CV Maker se ofrece de forma gratuita, sin garantia explicita de disponibilidad continua.',
+          'Hojita de vida 💕 se ofrece de forma gratuita, sin garantia explicita de disponibilidad continua.',
           'El usuario es responsable de la informacion que escribe y del uso que haga del documento generado.',
           'No se permite usar la herramienta para actividades ilegales o contenido que infrinja derechos de terceros.',
           'La aplicacion puede actualizarse para mejorar funciones, diseno o rendimiento.',
@@ -421,7 +421,7 @@ function App() {
       '/contact': {
         title: 'Contacto',
         body: [
-          'Si tienes dudas, sugerencias o reportes de error, puedes contactar al responsable del proyecto.',
+          'Si tienes dudas, sugerencias o reportes de error, puedes contactar al responsable de Hojita de vida 💕.',
           'Correo de contacto sugerido: maeskiros@gmail.com',
           'Tambien puedes abrir un issue en el repositorio oficial del proyecto en GitHub.',
           'Se intentara responder en tiempos razonables segun disponibilidad.',
@@ -438,7 +438,7 @@ function App() {
             <p key={paragraph}>{paragraph}</p>
           ))}
           <div className="legal-actions">
-            <a href="/">Volver al CV Maker</a>
+            <a href="/">Volver a Hojita de vida 💕</a>
           </div>
         </article>
       </main>
@@ -760,7 +760,7 @@ function App() {
 
       <section className="preview-column">
         <header className="top-bar">
-          <h1>CV Maker</h1>
+          <h1>Hoja de vida, resume cv gratis online sin registro</h1>
           <div className="top-actions">
             <div className="print-mode-toggle" role="group" aria-label="Modo de impresion">
               <button
