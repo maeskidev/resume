@@ -46,9 +46,11 @@ type ResumeData = {
 }
 
 type PrintMode = 'ats' | 'visual'
+type LegalRoute = '/privacy' | '/terms' | '/contact'
 
 const modeOptions: ExperienceMode[] = ['Presencial', 'Remoto', 'Hibrido']
 const RESUME_STORAGE_KEY = 'resume-maker-data-v1'
+const legalRoutes: LegalRoute[] = ['/privacy', '/terms', '/contact']
 
 const initialResumeData: ResumeData = {
   fullName: 'Michael E. Quiros',
@@ -116,11 +118,15 @@ const getInitialResumeData = (): ResumeData => {
 }
 
 function App() {
+  const currentPath = window.location.pathname as LegalRoute | string
   const resumeRef = useRef<HTMLDivElement | null>(null)
+  const adSlotRef = useRef<HTMLModElement | null>(null)
   const [isExporting, setIsExporting] = useState(false)
   const [data, setData] = useState<ResumeData>(getInitialResumeData)
   const [collapsedProjects, setCollapsedProjects] = useState<Record<string, boolean>>({})
   const [printMode, setPrintMode] = useState<PrintMode>('ats')
+  const adsenseClient = import.meta.env.VITE_ADSENSE_CLIENT as string | undefined
+  const adsenseSlot = import.meta.env.VITE_ADSENSE_SLOT as string | undefined
 
   useEffect(() => {
     window.localStorage.setItem(RESUME_STORAGE_KEY, JSON.stringify(data))
@@ -129,6 +135,45 @@ function App() {
   useEffect(() => {
     document.body.setAttribute('data-print-mode', printMode)
   }, [printMode])
+
+  useEffect(() => {
+    if (!adsenseClient) {
+      return
+    }
+
+    const existing = document.querySelector(
+      'script[data-adsbygoogle-script="true"]',
+    ) as HTMLScriptElement | null
+
+    if (existing) {
+      return
+    }
+
+    const script = document.createElement('script')
+    script.async = true
+    script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`
+    script.crossOrigin = 'anonymous'
+    script.dataset.adsbygoogleScript = 'true'
+    document.head.appendChild(script)
+  }, [adsenseClient])
+
+  useEffect(() => {
+    if (!adsenseClient || !adsenseSlot || !adSlotRef.current) {
+      return
+    }
+
+    const adNode = adSlotRef.current
+    if (adNode.dataset.adInitialized === 'true') {
+      return
+    }
+
+    try {
+      ;((window as Window & { adsbygoogle?: unknown[] }).adsbygoogle ||= []).push({})
+      adNode.dataset.adInitialized = 'true'
+    } catch {
+      // Ignore if AdSense is not ready yet.
+    }
+  }, [adsenseClient, adsenseSlot])
 
   const nextExperienceCompanyId = useMemo(() => {
     return data.experience.reduce((max, company) => Math.max(max, company.id), 0) + 1
@@ -350,11 +395,59 @@ function App() {
     window.print()
   }
 
+  if (legalRoutes.includes(currentPath as LegalRoute)) {
+    const page = currentPath as LegalRoute
+    const legalContent: Record<LegalRoute, { title: string; body: string[] }> = {
+      '/privacy': {
+        title: 'Politica de Privacidad',
+        body: [
+          'Esta aplicacion no requiere crear cuenta y no solicita datos personales sensibles para su uso normal.',
+          'La informacion del CV se guarda localmente en el navegador del usuario (localStorage) para mejorar la experiencia.',
+          'El contenido del CV no se envia a servidores externos del proyecto.',
+          'Si se habilita publicidad (Google AdSense), Google puede usar cookies o identificadores segun sus politicas.',
+          'Puedes borrar tus datos locales limpiando el almacenamiento del navegador.',
+        ],
+      },
+      '/terms': {
+        title: 'Terminos de Uso',
+        body: [
+          'CV Maker se ofrece de forma gratuita, sin garantia explicita de disponibilidad continua.',
+          'El usuario es responsable de la informacion que escribe y del uso que haga del documento generado.',
+          'No se permite usar la herramienta para actividades ilegales o contenido que infrinja derechos de terceros.',
+          'La aplicacion puede actualizarse para mejorar funciones, diseno o rendimiento.',
+          'El uso de esta aplicacion implica aceptacion de estos terminos.',
+        ],
+      },
+      '/contact': {
+        title: 'Contacto',
+        body: [
+          'Si tienes dudas, sugerencias o reportes de error, puedes contactar al responsable del proyecto.',
+          'Correo de contacto sugerido: maeskiros@gmail.com',
+          'Tambien puedes abrir un issue en el repositorio oficial del proyecto en GitHub.',
+          'Se intentara responder en tiempos razonables segun disponibilidad.',
+        ],
+      },
+    }
+
+    const content = legalContent[page]
+    return (
+      <main className="legal-shell">
+        <article className="legal-card">
+          <h1>{content.title}</h1>
+          {content.body.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
+          <div className="legal-actions">
+            <a href="/">Volver al CV Maker</a>
+          </div>
+        </article>
+      </main>
+    )
+  }
+
   return (
     <main className="app-shell">
       <aside className="form-column">
-        <h2>Formulario</h2>
-
         <section className="form-section">
           <h3>Perfil</h3>
           <label>
@@ -408,6 +501,21 @@ function App() {
             />
           </label>
         </section>
+
+        {adsenseClient && adsenseSlot && (
+          <section className="form-section ad-form-section">
+            <h4>Patrocinado</h4>
+            <ins
+              ref={adSlotRef}
+              className="adsbygoogle"
+              style={{ display: 'block' }}
+              data-ad-client={adsenseClient}
+              data-ad-slot={adsenseSlot}
+              data-ad-format="auto"
+              data-full-width-responsive="true"
+            />
+          </section>
+        )}
 
         <section className="form-section">
           <div className="section-title">
@@ -751,6 +859,12 @@ function App() {
           </section>
         </article>
       </section>
+
+      <footer className="legal-footer">
+        <a href="/privacy">Privacidad</a>
+        <a href="/terms">Terminos</a>
+        <a href="/contact">Contacto</a>
+      </footer>
     </main>
   )
 }
