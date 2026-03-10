@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://maeskidev.github.io/resume/sitemap.xml
+Sitemap: https://hojitadevida.com/sitemap.xml
