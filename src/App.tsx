@@ -6,6 +6,9 @@ import collapseIcon from './assets/collapse.svg'
 import deleteIcon from './assets/delete.svg'
 import expandIcon from './assets/expand.svg'
 import './App.css'
+import { GuiasListado } from './components/GuiasListado'
+import { GuiasArticulo } from './components/GuiasArticulo'
+import { getGuiaBySlug } from './data/guias'
 
 type ExperienceMode = 'Presencial' | 'Remoto' | 'Hibrido'
 
@@ -404,6 +407,25 @@ function App() {
   const printResume = () => {
     document.body.setAttribute('data-print-mode', printMode)
     window.print()
+  }
+
+  if (currentPath === '/guias') {
+    return <GuiasListado />
+  }
+
+  if (currentPath.startsWith('/guias/')) {
+    const slug = currentPath.replace('/guias/', '')
+    const guia = getGuiaBySlug(slug)
+    if (!guia) {
+      return (
+        <main className="guias-shell">
+          <h1>Página no encontrada</h1>
+          <p>La guía que buscas no existe.</p>
+          <a href="/">← Volver al inicio</a>
+        </main>
+      )
+    }
+    return <GuiasArticulo guia={guia} />
   }
 
   if (legalRoutes.includes(currentPath as LegalRoute)) {

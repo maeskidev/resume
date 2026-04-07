@@ -1335,3 +1335,231 @@ textarea:focus {
     padding-bottom: 0;
   }
 }
+
+/* =========================================================
+   GUIAS SECTION
+   ========================================================= */
+
+.guias-shell {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+  background: #fffefb;
+  min-height: 100vh;
+  font-family: Georgia, 'Times New Roman', serif;
+  color: #1a1a1a;
+  line-height: 1.75;
+}
+
+.guias-back-link {
+  display: inline-block;
+  font-family: system-ui, sans-serif;
+  font-size: 0.875rem;
+  color: #4b5563;
+  text-decoration: none;
+  margin-bottom: 1.75rem;
+  transition: color 0.15s;
+}
+
+.guias-back-link:hover {
+  color: #111;
+}
+
+/* Breadcrumb */
+.guias-breadcrumb {
+  margin-bottom: 1.5rem;
+}
+
+.guias-breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  font-size: 0.8125rem;
+  color: #6b7280;
+}
+
+.guias-breadcrumb li + li::before {
+  content: '›';
+  margin-right: 0.5rem;
+  color: #9ca3af;
+}
+
+.guias-breadcrumb a {
+  color: #4b5563;
+  text-decoration: none;
+}
+
+.guias-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+/* Article header */
+.guias-article-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.guias-article-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.25;
+  margin: 0 0 0.5rem;
+  color: #111;
+}
+
+.guias-article-date {
+  font-family: system-ui, sans-serif;
+  font-size: 0.8125rem;
+  color: #9ca3af;
+}
+
+.guias-intro {
+  font-family: system-ui, sans-serif;
+  font-size: 1rem;
+  color: #4b5563;
+  margin: 0.75rem 0 0;
+}
+
+/* Article body */
+.guias-article-body {
+  margin-bottom: 2.5rem;
+}
+
+.guias-article-body h2 {
+  font-size: 1.375rem;
+  font-weight: 700;
+  margin: 2rem 0 0.75rem;
+  color: #111;
+}
+
+.guias-article-body h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 1.5rem 0 0.5rem;
+  color: #222;
+}
+
+.guias-article-body p {
+  margin: 0 0 1.25rem;
+}
+
+.guias-article-body ul,
+.guias-article-body ol {
+  padding-left: 1.5rem;
+  margin: 0 0 1.25rem;
+}
+
+.guias-article-body li {
+  margin-bottom: 0.4rem;
+}
+
+.guias-placeholder {
+  color: #9ca3af;
+  font-style: italic;
+  font-family: system-ui, sans-serif;
+  background: #f9f9f7;
+  border: 1px dashed #d1d5db;
+  border-radius: 6px;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* CTA block */
+.guias-cta {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  margin: 3rem 0 2rem;
+}
+
+.guias-cta p {
+  font-family: system-ui, sans-serif;
+  font-size: 1rem;
+  color: #374151;
+  margin: 0 0 1rem;
+}
+
+.guias-cta-btn {
+  display: inline-block;
+  background: #2563eb;
+  color: #fff;
+  font-family: system-ui, sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  padding: 0.7rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.15s, box-shadow 0.15s;
+}
+
+.guias-cta-btn:hover {
+  background: #1d4ed8;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+/* Guias list (index page) */
+.guias-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.guias-card {
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  background: #fff;
+  transition: box-shadow 0.15s, border-color 0.15s;
+}
+
+.guias-card:hover {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
+  border-color: #d1d5db;
+}
+
+.guias-card-link {
+  display: block;
+  padding: 1.25rem 1.5rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.guias-card-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+  color: #1a1a1a;
+  font-family: system-ui, sans-serif;
+}
+
+.guias-card:hover .guias-card-title {
+  color: #2563eb;
+}
+
+.guias-card-desc {
+  font-size: 0.9375rem;
+  color: #4b5563;
+  margin: 0 0 0.5rem;
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+.guias-card-date {
+  font-size: 0.8125rem;
+  color: #9ca3af;
+  font-family: system-ui, sans-serif;
+}
+
+@media print {
+  .guias-cta,
+  .guias-breadcrumb,
+  .guias-back-link {
+    display: none;
+  }
+}
