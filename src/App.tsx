@@ -9,6 +9,7 @@ import './App.css'
 import { GuiasListado } from './components/GuiasListado'
 import { GuiasArticulo } from './components/GuiasArticulo'
 import { getGuiaBySlug } from './data/guias'
+import { Sidebar } from './components/Sidebar'
 
 type ExperienceMode = 'Presencial' | 'Remoto' | 'Hibrido'
 
@@ -137,6 +138,7 @@ function App() {
   const [activeStep, setActiveStep] = useState(0)
   const adsenseClient = import.meta.env.VITE_ADSENSE_CLIENT as string | undefined
   const adsenseSlot = import.meta.env.VITE_ADSENSE_SLOT as string | undefined
+  const [sidebarExpanded, setSidebarExpanded] = useState(false)
 
   const isFirstStep = activeStep === 0
   const isLastStep = activeStep === formSteps.length - 1
@@ -409,12 +411,13 @@ function App() {
     window.print()
   }
 
-  if (currentPath === '/guias') {
-    return <GuiasListado />
-  }
+  const renderContent = () => {
+    if (currentPath === '/guias') {
+      return <GuiasListado />
+    }
 
-  if (currentPath.startsWith('/guias/')) {
-    const slug = currentPath.replace('/guias/', '')
+    if (currentPath.startsWith('/guias/')) {
+      const slug = currentPath.replace('/guias/', '')
     const guia = getGuiaBySlug(slug)
     if (!guia) {
       return (
@@ -579,7 +582,7 @@ function App() {
                   <h3>Experiencia</h3>
                 </div>
 
-                {data.experience.map((company) => (
+                {[...data.experience].reverse().map((company) => (
                   <div className="group-card" key={company.id}>
                     <button
                       type="button"
@@ -634,7 +637,7 @@ function App() {
                     </div>
 
                     <div className="projects-list-indent">
-                      {company.projects.map((project) => {
+                      {[...company.projects].reverse().map((project) => {
                         const projectKey = `${company.id}-${project.id}`
                         const isCollapsed = Boolean(collapsedProjects[projectKey])
 
@@ -898,7 +901,7 @@ function App() {
           <section className="resume-section resume-section-experience">
             <h4>Experiencia</h4>
             {data.experience.length === 0 && <p className="empty-text">Sin experiencia agregada.</p>}
-            {data.experience.map((company) => (
+            {[...data.experience].reverse().map((company) => (
               <article className="exp-company-block" key={company.id}>
                 <div className="exp-company-head">
                   <div className="exp-company-logo">{company.companyLogoText || 'LOGO'}</div>
@@ -912,7 +915,7 @@ function App() {
                   {company.projects.length === 0 && (
                     <p className="empty-text">Sin proyectos registrados.</p>
                   )}
-                  {company.projects.map((project) => (
+                  {[...company.projects].reverse().map((project) => (
                     <article className="exp-project-item" key={project.id}>
                       <div className="exp-project-bullet" />
                       <div className="exp-project-content">
@@ -952,18 +955,21 @@ function App() {
         </article>
       </section>
 
-      <footer className="legal-footer">
-        <a href="/privacy" data-tip="Privacidad">
-          Privacidad
-        </a>
-        <a href="/terms" data-tip="Terminos">
-          Terminos
-        </a>
-        <a href="/contact" data-tip="Contacto">
-          Contacto
-        </a>
-      </footer>
     </main>
+  )
+  }
+
+  return (
+    <div className="layout-root">
+      <Sidebar
+        isExpanded={sidebarExpanded}
+        onToggle={() => setSidebarExpanded((prev) => !prev)}
+        currentPath={currentPath}
+      />
+      <div className="layout-content">
+        {renderContent()}
+      </div>
+    </div>
   )
 }
 
