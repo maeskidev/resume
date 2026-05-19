@@ -50,8 +50,27 @@ type ResumeData = {
 }
 
 type PrintMode = 'ats' | 'visual'
+type LayoutMode = 'linkedin' | 'portfolio'
 type LegalRoute = '/privacy' | '/terms' | '/contact'
 type FormStepKey = 'profile' | 'experience' | 'education'
+
+type PortfolioTheme = {
+  id: string
+  label: string
+  bg: string
+  accent: string
+  accentLight: string
+  accentText: string
+}
+
+const portfolioThemes: PortfolioTheme[] = [
+  { id: 'ocean',    label: 'Océano',   bg: '#0f172a', accent: '#38bdf8', accentLight: '#e0f2fe', accentText: '#0369a1' },
+  { id: 'forest',   label: 'Bosque',   bg: '#0a1f14', accent: '#34d399', accentLight: '#d1fae5', accentText: '#065f46' },
+  { id: 'amethyst', label: 'Amatista', bg: '#1a1040', accent: '#a78bfa', accentLight: '#ede9fe', accentText: '#5b21b6' },
+  { id: 'volcano',  label: 'Volcán',   bg: '#1c0800', accent: '#fb923c', accentLight: '#ffedd5', accentText: '#9a3412' },
+  { id: 'rose',     label: 'Rosa',     bg: '#1a0810', accent: '#f472b6', accentLight: '#fce7f3', accentText: '#9d174d' },
+  { id: 'graphite', label: 'Grafito',  bg: '#1a1a1a', accent: '#e5e7eb', accentLight: '#f3f4f6', accentText: '#374151' },
+]
 
 const modeOptions: ExperienceMode[] = ['Presencial', 'Remoto', 'Hibrido']
 const RESUME_STORAGE_KEY = 'resume-maker-data-v1'
@@ -139,6 +158,8 @@ function App() {
   const adsenseClient = import.meta.env.VITE_ADSENSE_CLIENT as string | undefined
   const adsenseSlot = import.meta.env.VITE_ADSENSE_SLOT as string | undefined
   const [sidebarExpanded, setSidebarExpanded] = useState(false)
+  const [layoutMode, setLayoutMode] = useState<LayoutMode>('linkedin')
+  const [portfolioTheme, setPortfolioTheme] = useState<PortfolioTheme>(portfolioThemes[0])
 
   const isFirstStep = activeStep === 0
   const isLastStep = activeStep === formSteps.length - 1
@@ -857,6 +878,37 @@ function App() {
         <header className="top-bar">
           <h1>Hoja de vida, resume cv gratis online sin registro</h1>
           <div className="top-actions">
+            <div className="print-mode-toggle" role="group" aria-label="Modo de diseño">
+              <button
+                type="button"
+                className={`print-mode-btn ${layoutMode === 'linkedin' ? 'active' : ''}`}
+                onClick={() => setLayoutMode('linkedin')}
+              >
+                LinkedIn
+              </button>
+              <button
+                type="button"
+                className={`print-mode-btn ${layoutMode === 'portfolio' ? 'active' : ''}`}
+                onClick={() => setLayoutMode('portfolio')}
+              >
+                Portfolio
+              </button>
+            </div>
+            {layoutMode === 'portfolio' && (
+              <div className="pf-theme-swatches" role="group" aria-label="Color del portfolio">
+                {portfolioThemes.map((theme) => (
+                  <button
+                    key={theme.id}
+                    type="button"
+                    className={`pf-swatch-btn ${portfolioTheme.id === theme.id ? 'is-active' : ''}`}
+                    title={theme.label}
+                    aria-label={theme.label}
+                    onClick={() => setPortfolioTheme(theme)}
+                    style={{ background: theme.accent }}
+                  />
+                ))}
+              </div>
+            )}
             <div className="print-mode-toggle" role="group" aria-label="Modo de impresion">
               <button
                 type="button"
@@ -882,6 +934,7 @@ function App() {
           </div>
         </header>
 
+        {layoutMode === 'linkedin' ? (
         <article className="resume-preview" ref={resumeRef}>
           <header className="resume-header resume-header-calibrated">
             <h2 className="header-name">{data.fullName || 'Tu Nombre'}</h2>
@@ -953,6 +1006,87 @@ function App() {
             ))}
           </section>
         </article>
+        ) : (
+        <article
+          className="resume-preview resume-portfolio"
+          ref={resumeRef}
+          style={{
+            '--pf-sidebar-bg': portfolioTheme.bg,
+            '--pf-accent': portfolioTheme.accent,
+            '--pf-accent-light': portfolioTheme.accentLight,
+            '--pf-accent-text': portfolioTheme.accentText,
+          } as React.CSSProperties}
+        >
+          <aside className="pf-sidebar">
+            <div className="pf-sidebar-name">
+              <h2>{data.fullName || 'Tu Nombre'}</h2>
+              <p className="pf-role">{data.role || 'Tu Cargo'}</p>
+            </div>
+
+            <div className="pf-sidebar-block">
+              <h3 className="pf-sidebar-heading">Contacto</h3>
+              <ul className="pf-contact-list">
+                {data.email && <li>{data.email}</li>}
+                {data.phone && <li>{data.phone}</li>}
+                {data.location && <li>{data.location}</li>}
+                {data.website && <li>{data.website}</li>}
+              </ul>
+            </div>
+
+            <div className="pf-sidebar-block">
+              <h3 className="pf-sidebar-heading">Perfil</h3>
+              <p className="pf-summary">{data.summary || 'Agrega un resumen profesional.'}</p>
+            </div>
+
+            <div className="pf-sidebar-block">
+              <h3 className="pf-sidebar-heading">Educacion</h3>
+              {data.education.map((item) => (
+                <div className="pf-edu-item" key={item.id}>
+                  <p className="pf-edu-degree">{item.degree || 'Titulo/Carrera'}</p>
+                  <p className="pf-edu-institution">{item.institution || 'Institucion'}</p>
+                  <p className="pf-edu-period">{item.period || 'Periodo'}</p>
+                </div>
+              ))}
+            </div>
+          </aside>
+
+          <div className="pf-main">
+            <section className="pf-section">
+              <h3 className="pf-section-title">Experiencia</h3>
+              {data.experience.length === 0 && <p className="empty-text">Sin experiencia agregada.</p>}
+              {[...data.experience].reverse().map((company) => (
+                <div className="pf-company" key={company.id}>
+                  <div className="pf-company-head">
+                    <div className="pf-company-logo">{company.companyLogoText || 'LOGO'}</div>
+                    <div>
+                      <p className="pf-company-name">{company.companyName || 'Nombre de empresa'}</p>
+                      <p className="pf-company-meta">{company.employmentMeta || 'Jornada completa'}</p>
+                    </div>
+                  </div>
+
+                  <div className="pf-projects">
+                    {[...company.projects].reverse().map((project) => (
+                      <div className="pf-project-item" key={project.id}>
+                        <div className="pf-project-dot" />
+                        <div className="pf-project-body">
+                          <div className="pf-project-header">
+                            <p className="pf-project-title">{project.title || 'Titulo del proyecto/rol'}</p>
+                            {project.mode && <span className="pf-mode-tag">{project.mode}</span>}
+                          </div>
+                          {project.period && (
+                            <p className="pf-project-period">{project.period}</p>
+                          )}
+                          <p className="pf-project-desc">{project.description || 'Agrega una descripcion.'}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </section>
+          </div>
+        </article>
+        )}
       </section>
 
     </main>

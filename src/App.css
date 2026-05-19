@@ -1739,3 +1739,285 @@ textarea:focus {
     display: none;
   }
 }
+
+/* =========================================================
+   PORTFOLIO LAYOUT
+   ========================================================= */
+
+.resume-portfolio {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100%;
+  background: #f1f5f9;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* --- Sidebar --- */
+.pf-sidebar {
+  background: var(--pf-sidebar-bg, #0f172a);
+  color: #e2e8f0;
+  padding: 2.4rem 1.6rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+  min-height: 100%;
+}
+
+.pf-sidebar-name h2 {
+  margin: 0;
+  font-size: 1.55rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: #f8fafc;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.pf-role {
+  margin: 0.4rem 0 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--pf-accent, #38bdf8);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.pf-sidebar-heading {
+  margin: 0 0 0.7rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--pf-accent, #38bdf8);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 0.35rem;
+}
+
+.pf-contact-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.42rem;
+}
+
+.pf-contact-list li {
+  font-size: 0.78rem;
+  color: #cbd5e1;
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+.pf-summary {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #94a3b8;
+  line-height: 1.6;
+}
+
+.pf-edu-item {
+  margin-bottom: 0.9rem;
+}
+
+.pf-edu-item:last-child {
+  margin-bottom: 0;
+}
+
+.pf-edu-degree {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  line-height: 1.3;
+}
+
+.pf-edu-institution {
+  margin: 0.18rem 0 0;
+  font-size: 0.73rem;
+  color: #94a3b8;
+}
+
+.pf-edu-period {
+  margin: 0.12rem 0 0;
+  font-size: 0.68rem;
+  color: #64748b;
+  font-style: italic;
+}
+
+/* --- Main content --- */
+.pf-main {
+  background: #f8fafc;
+  padding: 2rem 2rem 2.5rem;
+  overflow-y: auto;
+}
+
+.pf-section {
+  margin-bottom: 2rem;
+}
+
+.pf-section-title {
+  margin: 0 0 1.2rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+  font-family: 'Montserrat', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding-left: 0.8rem;
+  border-left: 4px solid var(--pf-accent, #38bdf8);
+}
+
+/* --- Company block --- */
+.pf-company {
+  margin-bottom: 1.5rem;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 1rem 1.1rem 0.85rem;
+  box-shadow: 0 1px 6px rgba(15, 23, 42, 0.07);
+  border: 1px solid #e2e8f0;
+}
+
+.pf-company-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.pf-company-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  background: var(--pf-sidebar-bg, #0f172a);
+  color: var(--pf-accent, #38bdf8);
+  font-size: 0.52rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pf-company-name {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.pf-company-meta {
+  margin: 0.1rem 0 0;
+  font-size: 0.74rem;
+  color: #64748b;
+}
+
+/* --- Projects timeline --- */
+.pf-projects {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-left: 0.6rem;
+  border-left: 2px solid #e2e8f0;
+  margin-left: 0.35rem;
+}
+
+.pf-project-item {
+  position: relative;
+  padding: 0.5rem 0 0.7rem 1.1rem;
+}
+
+.pf-project-dot {
+  position: absolute;
+  left: -0.45rem;
+  top: 0.7rem;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--pf-accent, #38bdf8);
+  border: 2px solid #f8fafc;
+}
+
+.pf-project-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.pf-project-title {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1.3;
+}
+
+.pf-mode-tag {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  background: var(--pf-accent-light, #e0f2fe);
+  color: var(--pf-accent-text, #0369a1);
+}
+
+.pf-project-period {
+  margin: 0.2rem 0 0;
+  font-size: 0.72rem;
+  color: #64748b;
+  font-style: italic;
+}
+
+.pf-project-desc {
+  margin: 0.3rem 0 0;
+  font-size: 0.82rem;
+  color: #475569;
+  line-height: 1.55;
+}
+
+/* --- Print portfolio --- */
+@media print {
+  .resume-portfolio {
+    grid-template-columns: 220px 1fr;
+    box-shadow: none;
+    border: none;
+  }
+  .pf-sidebar {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* --- Portfolio theme swatches --- */
+.pf-theme-swatches {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 2px;
+}
+
+.pf-swatch-btn {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.pf-swatch-btn:hover {
+  transform: scale(1.2);
+}
+
+.pf-swatch-btn.is-active {
+  border-color: #2a2f2b;
+  box-shadow: 0 0 0 2px rgba(42, 47, 43, 0.25);
+  transform: scale(1.15);
+}
