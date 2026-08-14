@@ -64,7 +64,7 @@ export function Home() {
         <nav className="home-nav-links" aria-label="Navegación principal">
           <a href="/" className="home-nav-link is-active" aria-current="page">Inicio</a>
           <a href="/guias" className="home-nav-link">Guías</a>
-          <a href="/premium" className="home-nav-link home-nav-link--premium">Premium</a>
+          {/* <a href="/premium" className="home-nav-link home-nav-link--premium">Premium</a> */}
         </nav>
         <a href="/crear" className="home-nav-create">Crear hoja de vida</a>
       </header>
@@ -72,9 +72,9 @@ export function Home() {
       {/* ── HEADLINE ── */}
       <section className="home-hero-section">
         <p className="home-eyebrow">Gratis · Sin registro · PDF en minutos</p>
-        <h1 className="home-headline">
+        {/* <h1 className="home-headline">
           CONSIGUE<br />EL TRABAJO.
-        </h1>
+        </h1> */}
       </section>
 
       {/* ── CARDS ── */}
@@ -241,22 +241,43 @@ export function Home() {
       {/* ── FEATURES ── */}
       <section className="home-features">
         <div className="home-feature">
-          <span className="home-feature-icon">⚡</span>
+          <span className="home-feature-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+            </svg>
+          </span>
           <h3>Tiempo real</h3>
           <p>Cada cambio aparece al instante en la vista previa.</p>
         </div>
         <div className="home-feature">
-          <span className="home-feature-icon">🔒</span>
+          <span className="home-feature-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+          </span>
           <h3>Privacidad total</h3>
           <p>Tus datos nunca salen de tu navegador. Sin servidores, sin cuentas.</p>
         </div>
         <div className="home-feature">
-          <span className="home-feature-icon">📥</span>
+          <span className="home-feature-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+          </span>
           <h3>PDF en un clic</h3>
           <p>Descarga tu hoja de vida como PDF o imprime directamente.</p>
         </div>
         <div className="home-feature">
-          <span className="home-feature-icon">🎨</span>
+          <span className="home-feature-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <circle cx="12" cy="10" r="3" />
+              <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662" />
+            </svg>
+          </span>
           <h3>Múltiples estilos</h3>
           <p>LinkedIn clásico o Portfolio oscuro con 6 temas de color.</p>
         </div>
