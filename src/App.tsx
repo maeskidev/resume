@@ -9,7 +9,8 @@ import './App.css'
 import { GuiasListado } from './components/GuiasListado'
 import { GuiasArticulo } from './components/GuiasArticulo'
 import { getGuiaBySlug } from './data/guias'
-import { Sidebar } from './components/Sidebar'
+import { Home } from './components/Home'
+import { PremiumEditor } from './components/PremiumEditor'
 
 type ExperienceMode = 'Presencial' | 'Remoto' | 'Hibrido'
 
@@ -157,9 +158,13 @@ function App() {
   const [activeStep, setActiveStep] = useState(0)
   const adsenseClient = import.meta.env.VITE_ADSENSE_CLIENT as string | undefined
   const adsenseSlot = import.meta.env.VITE_ADSENSE_SLOT as string | undefined
-  const [sidebarExpanded, setSidebarExpanded] = useState(false)
-  const [layoutMode, setLayoutMode] = useState<LayoutMode>('linkedin')
+  const [layoutMode, setLayoutMode] = useState<LayoutMode>(() => {
+    const param = new URLSearchParams(window.location.search).get('layout')
+    return param === 'portfolio' ? 'portfolio' : 'linkedin'
+  })
   const [portfolioTheme, setPortfolioTheme] = useState<PortfolioTheme>(portfolioThemes[0])
+  const [mobileEditorView, setMobileEditorView] = useState<'form' | 'preview'>('form')
+  const editorLabel = layoutMode === 'linkedin' ? 'LinkedIn Clásico' : 'Portfolio Dark'
 
   const isFirstStep = activeStep === 0
   const isLastStep = activeStep === formSteps.length - 1
@@ -433,6 +438,14 @@ function App() {
   }
 
   const renderContent = () => {
+    if (currentPath === '/') {
+      return <Home />
+    }
+
+    if (currentPath === '/premium') {
+      return <PremiumEditor />
+    }
+
     if (currentPath === '/guias') {
       return <GuiasListado />
     }
@@ -503,9 +516,75 @@ function App() {
   }
 
   return (
-    <main className="app-shell">
-      <aside className="form-column">
-        <div className="form-steps-shell">
+    <div className="premium-page">
+      {/* ── Top nav ── */}
+      <nav className="premium-nav">
+        <a href="/" className="premium-brand">Hojita<span>DeVida</span></a>
+
+        <div className="premium-nav-center">
+          <div className="premium-nav-dot" />
+          <span>{editorLabel}</span>
+        </div>
+
+        <div className="premium-nav-actions">
+          {/* Layout toggle */}
+          <div className="print-mode-toggle" role="group" aria-label="Plantilla">
+            <button
+              type="button"
+              className={`print-mode-btn ${layoutMode === 'linkedin' ? 'active' : ''}`}
+              onClick={() => setLayoutMode('linkedin')}
+            >LinkedIn</button>
+            <button
+              type="button"
+              className={`print-mode-btn ${layoutMode === 'portfolio' ? 'active' : ''}`}
+              onClick={() => setLayoutMode('portfolio')}
+            >Portfolio</button>
+          </div>
+
+          {/* Color swatches for portfolio */}
+          {layoutMode === 'portfolio' && (
+            <div className="pf-theme-swatches" role="group" aria-label="Color del portfolio">
+              {portfolioThemes.map((theme) => (
+                <button
+                  key={theme.id}
+                  type="button"
+                  className={`pf-swatch-btn ${portfolioTheme.id === theme.id ? 'is-active' : ''}`}
+                  title={theme.label}
+                  aria-label={theme.label}
+                  onClick={() => setPortfolioTheme(theme)}
+                  style={{ background: theme.accent }}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* ATS/Visual toggle */}
+          <div className="print-mode-toggle" role="group" aria-label="Modo de impresion">
+            <button type="button" className={`print-mode-btn ${printMode === 'ats' ? 'active' : ''}`} onClick={() => setPrintMode('ats')}>ATS</button>
+            <button type="button" className={`print-mode-btn ${printMode === 'visual' ? 'active' : ''}`} onClick={() => setPrintMode('visual')}>Visual</button>
+          </div>
+
+          <button className="premium-print" onClick={printResume}>
+            {printMode === 'ats' ? 'Imprimir ATS' : 'Imprimir Visual'}
+          </button>
+          <button className="premium-download" onClick={downloadPdf} disabled={isExporting}>
+            {isExporting ? 'Generando...' : 'PDF Imagen'}
+          </button>
+          <a href="/" className="premium-exit">Inicio</a>
+        </div>
+      </nav>
+
+      {/* ── Workspace ── */}
+      <div className={`premium-workspace premium-workspace--${mobileEditorView}`}>
+        {/* Form panel */}
+        <div className="premium-form-panel">
+          <div className="premium-form-heading">
+            <p>EDITOR DE PLANTILLA</p>
+            <h1>Construye tu<br />perfil.</h1>
+            <span>Los cambios se reflejan al instante.</span>
+          </div>
+
+          <div className="form-steps-shell">
           <nav className="form-steps-nav form-dock" aria-label="Pasos del formulario">
             {formSteps.map((step, index) => {
               const stateClass = index === activeStep ? 'is-active' : index < activeStep ? 'is-done' : ''
@@ -871,68 +950,12 @@ function App() {
               </section>
             )}
           </div>
-        </div>
-      </aside>
-
-      <section className="preview-column">
-        <header className="top-bar">
-          <h1>Hoja de vida, resume cv gratis online sin registro</h1>
-          <div className="top-actions">
-            <div className="print-mode-toggle" role="group" aria-label="Modo de diseño">
-              <button
-                type="button"
-                className={`print-mode-btn ${layoutMode === 'linkedin' ? 'active' : ''}`}
-                onClick={() => setLayoutMode('linkedin')}
-              >
-                LinkedIn
-              </button>
-              <button
-                type="button"
-                className={`print-mode-btn ${layoutMode === 'portfolio' ? 'active' : ''}`}
-                onClick={() => setLayoutMode('portfolio')}
-              >
-                Portfolio
-              </button>
-            </div>
-            {layoutMode === 'portfolio' && (
-              <div className="pf-theme-swatches" role="group" aria-label="Color del portfolio">
-                {portfolioThemes.map((theme) => (
-                  <button
-                    key={theme.id}
-                    type="button"
-                    className={`pf-swatch-btn ${portfolioTheme.id === theme.id ? 'is-active' : ''}`}
-                    title={theme.label}
-                    aria-label={theme.label}
-                    onClick={() => setPortfolioTheme(theme)}
-                    style={{ background: theme.accent }}
-                  />
-                ))}
-              </div>
-            )}
-            <div className="print-mode-toggle" role="group" aria-label="Modo de impresion">
-              <button
-                type="button"
-                className={`print-mode-btn ${printMode === 'ats' ? 'active' : ''}`}
-                onClick={() => setPrintMode('ats')}
-              >
-                ATS
-              </button>
-              <button
-                type="button"
-                className={`print-mode-btn ${printMode === 'visual' ? 'active' : ''}`}
-                onClick={() => setPrintMode('visual')}
-              >
-                Visual
-              </button>
-            </div>
-            <button className="print-btn" onClick={printResume}>
-              {printMode === 'ats' ? 'Imprimir ATS (Ctrl+P)' : 'Imprimir Visual (Ctrl+P)'}
-            </button>
-            <button className="download-btn" onClick={downloadPdf} disabled={isExporting}>
-              {isExporting ? 'Generando PDF...' : 'PDF Imagen'}
-            </button>
           </div>
-        </header>
+        </div>
+
+        {/* Preview panel */}
+        <div className="premium-preview-panel">
+          <div className="premium-canvas">
 
         {layoutMode === 'linkedin' ? (
         <article className="resume-preview" ref={resumeRef}>
@@ -1087,24 +1110,22 @@ function App() {
           </div>
         </article>
         )}
-      </section>
+          </div>
+        </div>
+      </div>
 
-    </main>
+      {/* Mobile toggle */}
+      <button
+        className="premium-mobile-view-toggle"
+        onClick={() => setMobileEditorView(v => v === 'form' ? 'preview' : 'form')}
+      >
+        {mobileEditorView === 'form' ? 'Ver vista previa' : 'Editar'}
+      </button>
+    </div>
   )
   }
 
-  return (
-    <div className="layout-root">
-      <Sidebar
-        isExpanded={sidebarExpanded}
-        onToggle={() => setSidebarExpanded((prev) => !prev)}
-        currentPath={currentPath}
-      />
-      <div className="layout-content">
-        {renderContent()}
-      </div>
-    </div>
-  )
+  return renderContent()
 }
 
 export default App
