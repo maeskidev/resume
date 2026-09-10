@@ -3,6 +3,7 @@ import { GuiasArticulo } from './components/GuiasArticulo'
 import { GuiasListado } from './components/GuiasListado'
 import { Home } from './components/Home'
 import { PremiumEditor } from './components/PremiumEditor'
+import { SharedResumePreview } from './components/SharedResumePreview'
 import { getGuiaBySlug } from './data/guias'
 
 type LegalRoute = '/privacy' | '/terms' | '/contact'
@@ -41,6 +42,8 @@ function App() {
   const currentPath = window.location.pathname
 
   if (currentPath === '/') return <Home />
+
+  if (currentPath === '/preview') return <SharedResumePreview />
 
   // /premium is preserved as a backwards-compatible entry to the unified editor.
   if (currentPath === '/crear' || currentPath === '/premium' || currentPath === '/portafolio') {

@@ -282,6 +282,11 @@ export function Home() {
           <p>LinkedIn clásico o Portfolio oscuro con 6 temas de color.</p>
         </div>
       </section>
+
+      <footer className="home-contact-footer">
+        <span>Contacto</span>
+        <a href="mailto:maeskiros@gmail.com">maeskiros@gmail.com</a>
+      </footer>
     </div>
   )
 }

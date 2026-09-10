@@ -1515,3 +1515,287 @@ input:focus, textarea:focus { outline: none; border-color: #84aef4; box-shadow: 
   .resume-portfolio { grid-template-columns: 2.35in 1fr !important; }
   .pf-main { overflow: visible !important; }
 }
+
+/* =========================================================
+   VISTA COMPARTIDA DEL CV
+   ========================================================= */
+
+.premium-preview-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px solid #d2d2d7;
+  border-radius: 999px;
+  padding: 0.48rem 0.82rem;
+  color: #4b5563;
+  background: #ffffff;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 150ms ease, background 150ms ease, transform 150ms ease;
+}
+
+.premium-preview-trigger:hover {
+  color: #5b21b6;
+  background: #f8f5ff;
+  transform: translateY(-1px);
+}
+
+.premium-preview-icon {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.share-tutorial-backdrop {
+  position: fixed;
+  z-index: 90;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.26);
+  backdrop-filter: blur(2px);
+}
+
+.share-tutorial-card {
+  position: absolute;
+  top: 64px;
+  left: 50%;
+  width: min(360px, calc(100vw - 2rem));
+  box-sizing: border-box;
+  padding: 1.15rem;
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  border-radius: 16px;
+  color: #1f2937;
+  background: #ffffff;
+  box-shadow: 0 20px 48px rgba(17, 24, 39, 0.22);
+  transform: translateX(-50%);
+}
+
+.share-tutorial-arrow {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  border-top: 1px solid rgba(124, 58, 237, 0.2);
+  border-left: 1px solid rgba(124, 58, 237, 0.2);
+  background: #ffffff;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.share-tutorial-icon {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  margin-bottom: 0.85rem;
+  border-radius: 10px;
+  color: #6d28d9;
+  background: #f3e8ff;
+}
+
+.share-tutorial-icon svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.share-tutorial-kicker {
+  margin: 0 0 0.35rem;
+  color: #7c3aed;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.share-tutorial-card h2 {
+  margin: 0;
+  color: #1d1d1f;
+  font-size: 1.18rem;
+  letter-spacing: -0.03em;
+}
+
+.share-tutorial-card > p:not(.share-tutorial-kicker) {
+  margin: 0.55rem 0 1rem;
+  color: #5b6472;
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.share-tutorial-card button {
+  width: 100%;
+  border: 0;
+  border-radius: 9px;
+  padding: 0.62rem 0.85rem;
+  color: #ffffff;
+  background: #7c3aed;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.share-tutorial-card button:hover { background: #6d28d9; }
+
+.shared-resume-page {
+  min-height: 100vh;
+  background: #f3f4f6;
+  color: #111827;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.shared-resume-nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: saturate(180%) blur(18px);
+}
+
+.shared-resume-brand,
+.shared-resume-brand span {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  text-decoration: none;
+}
+
+.shared-resume-brand { color: #111; }
+.shared-resume-brand span { color: #7c3aed; }
+
+.shared-resume-nav button,
+.shared-resume-return {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.5rem 0.9rem;
+  color: #ffffff;
+  background: #1d1d1f;
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 150ms ease, transform 150ms ease;
+}
+
+.shared-resume-nav button:hover,
+.shared-resume-return:hover {
+  background: #3a3a3c;
+  transform: translateY(-1px);
+}
+
+.shared-resume-canvas {
+  display: grid;
+  place-items: start center;
+  padding: clamp(1rem, 4vw, 3.5rem);
+}
+
+.shared-resume-canvas .premium-document,
+.shared-resume-canvas .unified-document {
+  margin: 0;
+}
+
+.shared-resume-error {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 1.25rem;
+  background: #f3f4f6;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.shared-resume-error section {
+  width: min(100%, 460px);
+  padding: clamp(1.5rem, 5vw, 2.5rem);
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 16px 38px rgba(17, 24, 39, 0.1);
+}
+
+.shared-resume-error h1 {
+  margin: 1.6rem 0 0.65rem;
+  color: #1d1d1f;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  letter-spacing: -0.04em;
+}
+
+.shared-resume-error p {
+  margin: 0 0 1.5rem;
+  color: #6b7280;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.shared-resume-return { display: inline-flex; }
+
+@media (max-width: 800px) {
+  .premium-preview-trigger { font-size: 0; padding: 0.48rem; }
+  .premium-preview-icon { width: 17px; height: 17px; }
+
+  .share-tutorial-card {
+    top: 64px;
+    left: 0.75rem;
+    width: calc(100vw - 1.5rem);
+    transform: none;
+  }
+
+  .share-tutorial-arrow {
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+  }
+
+  .shared-resume-nav { padding: 0 1rem; }
+  .shared-resume-canvas { padding: 0.75rem 0; overflow-x: hidden; }
+
+  .shared-resume-canvas .premium-document,
+  .shared-resume-canvas .unified-document {
+    width: 100%;
+    min-height: auto;
+    box-shadow: none;
+  }
+
+  .shared-resume-canvas .premium-document {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 2rem 1.4rem;
+  }
+
+  .shared-resume-canvas .premium-photo { width: min(220px, 70%); }
+  .shared-resume-canvas .premium-ai-badge { width: min(220px, 80%); margin-top: -2.5rem; }
+}
+
+@media print {
+  .shared-resume-page,
+  .shared-resume-canvas {
+    display: block !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: #ffffff !important;
+  }
+
+  .shared-resume-nav,
+  .share-tutorial-backdrop { display: none !important; }
+
+  .shared-resume-canvas .premium-document,
+  .shared-resume-canvas .unified-document {
+    margin: 0 !important;
+  }
+}
