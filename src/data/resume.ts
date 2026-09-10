@@ -31,9 +31,9 @@ export type ResumeData = {
 }
 
 export const initialResumeData: ResumeData = {
-  fullName: 'WILLIAM PARKER',
+  fullName: 'MICHAEL QUIROS',
   role: 'UX DESIGNER',
-  email: 'hello@yourname.com',
+  email: 'maeskiros@gmail.com',
   phone: '+1-234-097-864',
   location: 'Bogotá, Colombia',
   website: 'www.webaddress.com',
