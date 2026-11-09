@@ -1529,8 +1529,7 @@ input:focus, textarea:focus { outline: none; border-color: #84aef4; box-shadow: 
   .harvard-document { padding: 0.5in 0.65in; }
 
   .harvard-entry,
-  .harvard-job,
-  .harvard-section {
+  .harvard-job {
     break-inside: avoid;
     page-break-inside: avoid;
   }
