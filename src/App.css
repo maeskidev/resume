@@ -871,6 +871,31 @@ input:focus, textarea:focus { outline: none; border-color: #84aef4; box-shadow: 
   body[data-print-mode='visual'] .resume-preview { border: 1px solid #d7d0c3; box-shadow: none; background: #fffefb; }
   .resume-header, .resume-section, .exp-company-block, .exp-project-item, .item-card { orphans: 3; widows: 3; }
   .resume-section-education { padding-bottom: 0; }
+
+  /*
+    Evita que estos bloques se corten justo en el borde de una página.
+    Si un bloque no cabe completo en el espacio restante, se empuja
+    entero a la siguiente página en lugar de partirse por la mitad.
+  */
+  .exp-company-block,
+  .exp-project-item,
+  .item-card,
+  .pf-company,
+  .pf-project-item,
+  .premium-timeline-item,
+  .premium-education-item {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Evita que un título de sección quede solo al final de una página, separado de su contenido */
+  .resume-section h4,
+  .pf-section-title,
+  .premium-resume-section h2,
+  .premium-content-section > h2 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
   .home-page { display: none; }
   .resume-portfolio { grid-template-columns: 220px 1fr; box-shadow: none; border: none; }
   .pf-sidebar { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -1502,6 +1527,18 @@ input:focus, textarea:focus { outline: none; border-color: #84aef4; box-shadow: 
 
 @media print {
   .harvard-document { padding: 0.5in 0.65in; }
+
+  .harvard-entry,
+  .harvard-job,
+  .harvard-section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .harvard-section-title {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
 }
 
 .exp-project-content ul,
