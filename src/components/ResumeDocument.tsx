@@ -129,11 +129,13 @@ export function ResumeDocument({ data, template, documentRef }: ResumeDocumentPr
         <header className="harvard-header">
           <div className="harvard-identity">
             <h2 className="harvard-name">{data.fullName || 'Tu Nombre'}</h2>
+            {data.role && <p className="harvard-role">{data.role}</p>}
             <p className="harvard-contact-line">
               {contacts.map((contact, index) => (
                 <span key={contact}>{index > 0 && <span className="harvard-dot"> • </span>}{contact}</span>
               ))}
             </p>
+            {data.badge && <p className="harvard-badge">{data.badge}</p>}
           </div>
         </header>
 
