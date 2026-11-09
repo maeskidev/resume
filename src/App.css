@@ -1649,11 +1649,21 @@ input:focus, textarea:focus { outline: none; border-color: #84aef4; box-shadow: 
   /*
     LinkedIn se imprime con una zona útil de 7.5 × 10 in, centrada
     dentro de carta. Esto crea 0.5 in de margen lateral y vertical.
+    Harvard queda excluido: su maquetación ya usa el margen de @page
+    y el margin:0.5in de esta regla duplicaba el espacio en blanco
+    superior de la primera página (no se cancelaba con @page :first
+    porque es un margen de elemento, no de página).
   */
-  .resume-preview.unified-document:not(.resume-portfolio) {
+  .resume-preview.unified-document:not(.resume-portfolio):not(.harvard-document) {
     width: 7.5in !important;
     min-height: 10in !important;
     margin: 0.5in auto !important;
+  }
+
+  .harvard-document.unified-document {
+    width: 8.5in !important;
+    min-height: 11in !important;
+    margin: 0 !important;
   }
 
   .resume-portfolio { grid-template-columns: 2.35in 1fr !important; }
