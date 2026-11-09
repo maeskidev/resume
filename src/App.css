@@ -1204,7 +1204,7 @@ input:focus, textarea:focus { outline: none; border-color: #84aef4; box-shadow: 
   desactiva el "stage" escalado y se imprime únicamente el documento.
 */
 @media print {
-  @page { size: 8.5in 11in; margin: 0.6in 0.55in; }
+  @page { size: 8.5in 11in; margin: 0.5in 0.3in; }
   @page :first { margin: 0; }
 
   html,
