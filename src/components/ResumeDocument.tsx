@@ -123,6 +123,71 @@ export function ResumeDocument({ data, template, documentRef }: ResumeDocumentPr
     )
   }
 
+  if (template === 'harvard') {
+    return (
+      <article className="resume-preview unified-document harvard-document" ref={documentRef}>
+        <header className="harvard-header">
+          <div className="harvard-identity">
+            <h2 className="harvard-name">{data.fullName || 'Tu Nombre'}</h2>
+            <p className="harvard-contact-line">
+              {contacts.map((contact, index) => (
+                <span key={contact}>{index > 0 && <span className="harvard-dot"> • </span>}{contact}</span>
+              ))}
+            </p>
+          </div>
+        </header>
+
+        <section className="harvard-section harvard-profile-section">
+          <p className="harvard-profile">{data.profile || 'Agrega un resumen profesional.'}</p>
+        </section>
+
+        <section className="harvard-section">
+          <h3 className="harvard-section-title">Educación</h3>
+          <div className="harvard-divider" />
+          {data.education.map((item) => (
+            <div className="harvard-entry" key={item.id}>
+              <p className="harvard-entry-title">{item.institution || 'Institución'}</p>
+              <div className="harvard-entry-row">
+                <span>{item.degree || 'Título/Carrera'}</span>
+                <span className="harvard-entry-right">{item.period || 'Periodo'}</span>
+              </div>
+            </div>
+          ))}
+        </section>
+
+        <section className="harvard-section">
+          <h3 className="harvard-section-title">Experiencia Profesional</h3>
+          <div className="harvard-divider" />
+          {data.experience.map((item) => (
+            <article className="harvard-job" key={item.id}>
+              <div className="harvard-job-header">
+                <span className="harvard-job-company">{item.company || 'Nombre de empresa'}</span>
+                <span className="harvard-job-period">{item.period || 'Periodo'}</span>
+              </div>
+              <p className="harvard-job-title">{item.title || 'Cargo'}</p>
+              {item.description && <p className="harvard-job-desc">{item.description}</p>}
+              {splitLines(item.highlights).length > 0 && (
+                <ul className="harvard-bullet-list">
+                  {splitLines(item.highlights).map((highlight) => <li key={highlight}>{highlight}</li>)}
+                </ul>
+              )}
+            </article>
+          ))}
+        </section>
+
+        <section className="harvard-section">
+          <h3 className="harvard-section-title">Habilidades Técnicas</h3>
+          <div className="harvard-divider" />
+          <div className="harvard-skills-grid">
+            {splitList(data.skills).map((skill) => (
+              <span className="harvard-skill-item" key={skill}>• {skill}</span>
+            ))}
+          </div>
+        </section>
+      </article>
+    )
+  }
+
   return (
     <article className="resume-preview resume-portfolio unified-document" ref={documentRef}>
       <aside className="pf-sidebar">

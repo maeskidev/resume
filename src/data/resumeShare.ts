@@ -6,7 +6,7 @@ type SharedResumePayload = {
 }
 
 const isTemplateId = (value: unknown): value is TemplateId =>
-  value === 'design' || value === 'linkedin' || value === 'portfolio'
+  value === 'design' || value === 'linkedin' || value === 'portfolio' || value === 'harvard'
 
 const encodeBase64Url = (value: string) => {
   const bytes = new TextEncoder().encode(value)

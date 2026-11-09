@@ -1044,6 +1044,11 @@ input:focus, textarea:focus { outline: none; border-color: #84aef4; box-shadow: 
 .premium-repeat-card { position: relative; margin-top: 1rem; padding: 1rem; border: 1px solid #e4e4e8; border-radius: 12px; background: #fbfbfc; }
 .premium-repeat-card label:last-child { margin-bottom: 0; }
 .premium-remove { position: absolute; top: 0.55rem; right: 0.55rem; width: 22px; height: 22px; border: 0; border-radius: 50%; color: #86868b; background: #ebebef; font-size: 1rem; line-height: 1; cursor: pointer; }
+.premium-reorder-controls { position: absolute; top: 0.55rem; right: 2.85rem; display: flex; gap: 0.3rem; }
+.premium-reorder-btn { display: grid; place-items: center; width: 22px; height: 22px; border: 0; border-radius: 50%; color: #515154; background: #ebebef; cursor: pointer; transition: background 150ms ease, color 150ms ease, transform 150ms ease; }
+.premium-reorder-btn svg { width: 13px; height: 13px; fill: currentColor; }
+.premium-reorder-btn:hover:not(:disabled) { background: #0071e3; color: #fff; transform: translateY(-1px); }
+.premium-reorder-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
 .premium-preview-panel { min-width: 0; background: #ffffff; }
 .premium-canvas { position: sticky; top: 58px; display: grid; place-items: start center; height: calc(100vh - 58px); overflow: auto; padding: clamp(1.5rem,4vw,4rem); }
@@ -1419,6 +1424,82 @@ input:focus, textarea:focus { outline: none; border-color: #84aef4; box-shadow: 
   min-height: 11in;
   box-sizing: border-box;
   overflow: hidden;
+}
+
+/* =========================================================
+   HARVARD TEMPLATE
+   ========================================================= */
+
+.harvard-document {
+  padding: 2.6rem 2.8rem 3rem;
+  font-family: Calibri, Arial, Helvetica, sans-serif;
+  color: #1a1a1a;
+  line-height: 1.45;
+  box-sizing: border-box;
+}
+
+.harvard-header { margin-bottom: 1.6rem; }
+
+.harvard-identity { text-align: center; }
+.harvard-name { margin: 0 0 0.25rem; font-size: 0.95rem; font-weight: 700; }
+.harvard-contact-line { margin: 0; font-size: 0.85rem; color: #1a1a1a; }
+.harvard-dot { color: #1a1a1a; }
+
+.harvard-section { margin-top: 1.5rem; }
+
+.harvard-profile-section { margin-top: 0.4rem; }
+.harvard-profile { margin: 0; font-size: 0.85rem; line-height: 1.55; color: #1a1a1a; text-align: center; }
+
+.harvard-section-title {
+  margin: 0 0 0.45rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.harvard-divider { height: 1.5px; background: #1a1a1a; margin-bottom: 0.65rem; }
+
+.harvard-entry { margin-bottom: 0.9rem; }
+.harvard-entry-title { margin: 0 0 0.15rem; font-size: 0.85rem; font-weight: 700; }
+.harvard-entry-row { display: flex; justify-content: space-between; gap: 0.6rem; font-size: 0.85rem; }
+.harvard-entry-right { white-space: nowrap; }
+
+.harvard-skills-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.3rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+.harvard-skill-item { white-space: nowrap; }
+
+.harvard-job { margin-bottom: 1.1rem; }
+.harvard-job-header { display: flex; justify-content: space-between; gap: 0.6rem; font-size: 0.85rem; font-weight: 700; }
+.harvard-job-title { margin: 0.1rem 0 0.4rem; font-size: 0.85rem; font-style: italic; }
+.harvard-job-desc { margin: 0 0 0.4rem; font-size: 0.85rem; }
+.harvard-bullet-list { margin: 0; padding-left: 1.2rem; font-size: 0.85rem; }
+.harvard-bullet-list li { margin-bottom: 0.3rem; }
+
+.template-option--harvard .template-option-preview::before { display: none; }
+.template-option--harvard .template-option-preview {
+  grid-template-columns: 1fr;
+  background: #ffffff;
+  padding: 6px 10px;
+  box-sizing: border-box;
+  align-content: center;
+  gap: 4px;
+}
+.template-option--harvard .template-option-preview span { margin-left: 0; background: #b7b7bd; }
+.template-option--harvard .template-option-preview span:first-child { margin-top: 0; width: 42%; }
+.template-option--harvard .template-option-preview span:last-child { width: 72%; }
+
+@media (max-width: 800px) {
+  .harvard-document { padding: 1.6rem 1.4rem 2rem; }
+  .harvard-skills-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media print {
+  .harvard-document { padding: 0.5in 0.65in; }
 }
 
 .exp-project-content ul,

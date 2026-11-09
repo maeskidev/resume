@@ -23,3 +23,6 @@ reglas/
 *.njsproj
 *.sln
 *.sw?
+
+# graphify-axet
+.graphify/

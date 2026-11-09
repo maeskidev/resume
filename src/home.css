@@ -132,7 +132,7 @@
 
 .home-cards-track {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1.25rem;
   width: 100%;
 }
@@ -423,6 +423,31 @@
 }
 
 .home-tpl-design-line--short { width: 60%; }
+
+/* Harvard template preview inside card */
+.home-tpl-harvard-preview {
+  width: 100%;
+  max-width: 260px;
+  background: #ffffff;
+  border: 1.5px solid #d7d0c3;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.15);
+  padding: 0.75rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.home-tpl-harvard-title { height: 9px; width: 60%; background: #1a1a1a; border-radius: 2px; margin-bottom: 0.25rem; }
+.home-tpl-harvard-name { height: 6px; width: 40%; background: #333; border-radius: 2px; align-self: center; }
+.home-tpl-harvard-contact { height: 4px; width: 55%; background: #aaa; border-radius: 2px; align-self: center; margin-bottom: 0.3rem; }
+.home-tpl-harvard-section { height: 5px; width: 35%; background: #1a1a1a; border-radius: 2px; align-self: center; }
+.home-tpl-harvard-divider { width: 100%; height: 1px; background: #1a1a1a; margin: 0.15rem 0 0.3rem; }
+.home-tpl-harvard-line { height: 4px; background: #ccc; border-radius: 2px; }
+.home-tpl-harvard-line--short { width: 55%; }
+.home-tpl-harvard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.2rem; }
+.home-tpl-harvard-dot { height: 4px; background: #c7c3b8; border-radius: 2px; }
 
 /* Free card visual */
 .home-card-free-visual {

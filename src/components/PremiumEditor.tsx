@@ -25,6 +25,12 @@ const templates: Array<{ id: TemplateId; name: string; description: string; clas
     description: 'Estilo visual con barra lateral para perfiles creativos y tecnológicos.',
     className: 'template-option--portfolio',
   },
+  {
+    id: 'harvard',
+    name: 'Harvard clásico',
+    description: 'Formato académico serio, ideal para roles corporativos y ATS estrictos.',
+    className: 'template-option--harvard',
+  },
 ]
 
 const initialData = initialResumeData
@@ -50,7 +56,10 @@ const getStoredData = (): ResumeData => {
 
 const getInitialTemplate = (): TemplateId => {
   const requestedTemplate = new URLSearchParams(window.location.search).get('layout')
-  return requestedTemplate === 'linkedin' || requestedTemplate === 'portfolio' || requestedTemplate === 'design'
+  return requestedTemplate === 'linkedin' ||
+    requestedTemplate === 'portfolio' ||
+    requestedTemplate === 'design' ||
+    requestedTemplate === 'harvard'
     ? requestedTemplate
     : 'design'
 }
@@ -160,6 +169,34 @@ export function PremiumEditor() {
     setData((previous) => ({ ...previous, experience: previous.experience.filter((item) => item.id !== id) }))
   }
 
+  const moveEducation = (id: number, direction: 'up' | 'down') => {
+    setData((previous) => {
+      const index = previous.education.findIndex((item) => item.id === id)
+      if (index === -1) return previous
+      const newIndex = direction === 'up' ? index - 1 : index + 1
+      if (newIndex < 0 || newIndex >= previous.education.length) return previous
+
+      const reordered = [...previous.education]
+      const [moved] = reordered.splice(index, 1)
+      reordered.splice(newIndex, 0, moved)
+      return { ...previous, education: reordered }
+    })
+  }
+
+  const moveExperience = (id: number, direction: 'up' | 'down') => {
+    setData((previous) => {
+      const index = previous.experience.findIndex((item) => item.id === id)
+      if (index === -1) return previous
+      const newIndex = direction === 'up' ? index - 1 : index + 1
+      if (newIndex < 0 || newIndex >= previous.experience.length) return previous
+
+      const reordered = [...previous.experience]
+      const [moved] = reordered.splice(index, 1)
+      reordered.splice(newIndex, 0, moved)
+      return { ...previous, experience: reordered }
+    })
+  }
+
   const selectTemplate = (nextTemplate: TemplateId) => {
     setTemplate(nextTemplate)
     setIsTemplateModalOpen(false)
@@ -228,8 +265,28 @@ export function PremiumEditor() {
 
           <section className="premium-form-section">
             <div className="premium-section-head"><h2>Educación</h2><button type="button" onClick={addEducation}>Añadir</button></div>
-            {data.education.map((item) => (
+            {data.education.map((item, index) => (
               <div className="premium-repeat-card" key={item.id}>
+                <div className="premium-reorder-controls">
+                  <button
+                    type="button"
+                    className="premium-reorder-btn"
+                    onClick={() => moveEducation(item.id, 'up')}
+                    disabled={index === 0}
+                    aria-label="Subir educación"
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5l-7 7h4v7h6v-7h4z" /></svg>
+                  </button>
+                  <button
+                    type="button"
+                    className="premium-reorder-btn"
+                    onClick={() => moveEducation(item.id, 'down')}
+                    disabled={index === data.education.length - 1}
+                    aria-label="Bajar educación"
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19l7-7h-4V5H9v7H5z" /></svg>
+                  </button>
+                </div>
                 <button type="button" className="premium-remove" onClick={() => removeEducation(item.id)} aria-label="Eliminar educación">×</button>
                 <label>Programa<input value={item.degree} onChange={(event) => updateEducation(item.id, 'degree', event.target.value)} /></label>
                 <label>Institución<input value={item.institution} onChange={(event) => updateEducation(item.id, 'institution', event.target.value)} /></label>
@@ -240,8 +297,28 @@ export function PremiumEditor() {
 
           <section className="premium-form-section">
             <div className="premium-section-head"><h2>Experiencia</h2><button type="button" onClick={addExperience}>Añadir</button></div>
-            {data.experience.map((item) => (
+            {data.experience.map((item, index) => (
               <div className="premium-repeat-card" key={item.id}>
+                <div className="premium-reorder-controls">
+                  <button
+                    type="button"
+                    className="premium-reorder-btn"
+                    onClick={() => moveExperience(item.id, 'up')}
+                    disabled={index === 0}
+                    aria-label="Subir experiencia"
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5l-7 7h4v7h6v-7h4z" /></svg>
+                  </button>
+                  <button
+                    type="button"
+                    className="premium-reorder-btn"
+                    onClick={() => moveExperience(item.id, 'down')}
+                    disabled={index === data.experience.length - 1}
+                    aria-label="Bajar experiencia"
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19l7-7h-4V5H9v7H5z" /></svg>
+                  </button>
+                </div>
                 <button type="button" className="premium-remove" onClick={() => removeExperience(item.id)} aria-label="Eliminar experiencia">×</button>
                 <label>Cargo<input value={item.title} onChange={(event) => updateExperience(item.id, 'title', event.target.value)} /></label>
                 <div className="premium-field-grid">

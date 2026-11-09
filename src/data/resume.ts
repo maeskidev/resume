@@ -14,7 +14,7 @@ export type ExperienceItem = {
   highlights: string
 }
 
-export type TemplateId = 'design' | 'linkedin' | 'portfolio'
+export type TemplateId = 'design' | 'linkedin' | 'portfolio' | 'harvard'
 
 export type ResumeData = {
   fullName: string

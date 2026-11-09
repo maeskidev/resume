@@ -25,6 +25,14 @@ const templateCards = [
     cta: 'Usar esta plantilla',
     href: '/crear?layout=portfolio',
   },
+  {
+    id: 'harvard',
+    label: 'ACADÉMICO',
+    titleLines: ['HARVARD', 'CLÁSICO.'],
+    description: 'Formato serio y centrado, ideal para roles corporativos y ATS estrictos.',
+    cta: 'Usar esta plantilla',
+    href: '/crear?layout=harvard',
+  },
 ]
 
 export function Home() {
@@ -197,6 +205,28 @@ export function Home() {
                           <div className="home-tpl-design-line home-tpl-design-line--short" />
                         </div>
                       </div>
+                    </div>
+                  </div>
+                )}
+
+                {card.id === 'harvard' && (
+                  <div className="home-tpl-harvard-preview">
+                    <div className="home-tpl-harvard-title" />
+                    <div className="home-tpl-harvard-name" />
+                    <div className="home-tpl-harvard-contact" />
+                    <div className="home-tpl-harvard-section" />
+                    <div className="home-tpl-harvard-divider" />
+                    <div className="home-tpl-harvard-line" />
+                    <div className="home-tpl-harvard-line home-tpl-harvard-line--short" />
+                    <div className="home-tpl-harvard-section" />
+                    <div className="home-tpl-harvard-divider" />
+                    <div className="home-tpl-harvard-grid">
+                      <div className="home-tpl-harvard-dot" />
+                      <div className="home-tpl-harvard-dot" />
+                      <div className="home-tpl-harvard-dot" />
+                      <div className="home-tpl-harvard-dot" />
+                      <div className="home-tpl-harvard-dot" />
+                      <div className="home-tpl-harvard-dot" />
                     </div>
                   </div>
                 )}
