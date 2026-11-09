@@ -856,7 +856,15 @@ input:focus, textarea:focus { outline: none; border-color: #84aef4; box-shadow: 
 .legal-footer a { background: #f2f7ff; border-color: #d3e2f6; color: #244674; }
 .legal-footer a:hover { background: #e8f2ff; }
 
-@page { size: 8.5in 11in; margin: 0; }
+@page {
+  size: 8.5in 11in;
+  margin: 0.5in 0 0 0;
+}
+
+/* La primera página no necesita margen superior adicional: ya tiene su propio padding interno */
+@page :first {
+  margin-top: 0;
+}
 
 @media print {
   body { background: #ffffff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -1181,7 +1189,8 @@ input:focus, textarea:focus { outline: none; border-color: #84aef4; box-shadow: 
   desactiva el "stage" escalado y se imprime únicamente el documento.
 */
 @media print {
-  @page { size: 8.5in 11in; margin: 0; }
+  @page { size: 8.5in 11in; margin: 0.5in 0 0 0; }
+  @page :first { margin-top: 0; }
 
   html,
   body,
